@@ -1,19 +1,8 @@
 (ns jasons_game.core
   (:require [clojure.string :refer [split]]
-            [clojure.pprint :refer [pprint]]))
+            [clojure.pprint :refer [pprint]]
+            [clojure.walk :refer [postwalk-replace]]))
 
-;; People
-
-(def jason {:name "Jason"})
-(def daddy {:name "Daddy"})
-(def mommy {:name "Mommy"})
-
-;; Sentence
-
-(def sentence-text "I am happy to meet you")
-;(def sentence-text "I love you!")
-;(def sentence-text "My name is :speaker:name")
-;(def sentence-text "I am happy to meet you")
 
 ;; Parts of speech
 
@@ -24,6 +13,7 @@
                            "mine" :speaker
                            "your" :addressee}})
 
+
 ;; Parsing
 ;;; Sentence is a sequence of Phrases or Words
 ;;; Sentence, Phrase, and Word can have metadata
@@ -31,7 +21,8 @@
 (defn create-word
   "return a map with various attributes of word"
   [word-text]
-  (merge {:text word-text}
+  (merge {:type :word
+          :text word-text}
          (first (filter #(not (nil? %)) (for [pronoun-type (keys pronouns)
                                               pronoun-info (pronouns pronoun-type)]
                                           (let [pronoun (first pronoun-info)
@@ -45,7 +36,8 @@
 
 (defn create-phrase
   [phrase-text]
-  {:words (for [word-text (split-phrase-text-into-words phrase-text)] (create-word word-text))})
+  {:type :phrase
+   :words (for [word-text (split-phrase-text-into-words phrase-text)] (create-word word-text))})
   
 (defn split-sentence-text-into-phrases
   [sentence-text]
@@ -54,20 +46,21 @@
 (defn parse-sentence-text
   "Takes in a sentence string and produces a sentence as a collection of phrases which in turn are a collection of words.
   
-  The input sentence string 
+  The input sentence string may be annotated to indicate phrases. (TBD)
   
   The produced sentence, phrases, and words are each maps which have the following structures:
-    Sentence: {:phrases [...phrases...] ...other sentence attributes...}
-    Phrase: {:words [...words...] ...other phrase attributes...}
-    Word: {:text \"text\" ...other word attributes...}"
-  ([sentence-text] {:phrases (for [phrase-text (split-sentence-text-into-phrases sentence-text)] (create-phrase phrase-text))}))
+    Sentence: {:type :sentence, :phrases (...phrases...), ...other sentence attributes...}
+    Phrase: {:type :phrase, :words (...words...), ...other phrase attributes...}
+    Word: {:type :word, :text \"text\", ...other word attributes...}"
+  ([sentence-text] {:type :sentence,
+                    :phrases (for [phrase-text (split-sentence-text-into-phrases sentence-text)] (create-phrase phrase-text))}))
 
 
 ;; Environment
 
-(def env {:speaker jason
-          :addressee daddy})
+(defn bind-to-env
+  "Binds an environment to a sentence. The environment is a map of things like :speaker and :addressee to particular
+  instances of objects in the world"
+  [sentence env]
+  (postwalk-replace env sentence))
 
-;(defn bind-to-env
-;  [sentence env]
-;  )
