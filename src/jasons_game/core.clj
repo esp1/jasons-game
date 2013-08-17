@@ -1,7 +1,6 @@
 (ns jasons_game.core
   (:require [clojure.string :refer [split]]
-            [clojure.pprint :refer [pprint]]
-            [clojure.walk :refer []))
+            [clojure.pprint :refer [pprint]]))
 
 ;; People
 
@@ -69,6 +68,6 @@
 (def env {:speaker jason
           :addressee daddy})
 
-(defn bind-to-env
-  [sentence env]
-  )
+;(defn bind-to-env
+;  [sentence env]
+;  )
