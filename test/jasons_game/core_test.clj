@@ -2,6 +2,11 @@
   (:use clojure.test
         jasons_game.core))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest test-parse-sentence-text
+  (testing "Parse sentence text"
+           (is (=
+                 '{:phrases
+                   ({:words ({:target :speaker, :text "I"})}
+                     {:words ({:text "love"})}
+                     {:words ({:target :addressee, :text "you"})})}
+                 (parse-sentence-text "I love you")))))
