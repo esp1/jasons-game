@@ -37,23 +37,38 @@
 (defn create-phrase
   [phrase-text]
   {:type :phrase
-   :words (for [word-text (split-phrase-text-into-words phrase-text)] (create-word word-text))})
+   :words (for [word-text (split-phrase-text-into-words phrase-text)]
+            (create-word word-text))})
   
-(defn split-sentence-text-into-phrases
+(defn split-sentence-text-into-elements
   [sentence-text]
   (split sentence-text #"\W"))
 
 (defn parse-sentence-text
-  "Takes in a sentence string and produces a sentence as a collection of phrases which in turn are a collection of words.
+  "Takes in a sentence string and produces a sentence as a collection of phrases and words.
   
   The input sentence string may be annotated to indicate phrases. (TBD)
   
   The produced sentence, phrases, and words are each maps which have the following structures:
-    Sentence: {:type :sentence, :phrases (...phrases...), ...other sentence attributes...}
-    Phrase: {:type :phrase, :words (...words...), ...other phrase attributes...}
-    Word: {:type :word, :text \"text\", ...other word attributes...}"
-  ([sentence-text] {:type :sentence,
-                    :phrases (for [phrase-text (split-sentence-text-into-phrases sentence-text)] (create-phrase phrase-text))}))
+
+    Sentence: {:type :sentence
+               :elements (...phrases and/or words...)
+               ...other sentence attributes...}
+
+    Phrase: {:type :phrase
+             :words (...words...)
+             ...other phrase attributes...}
+
+    Word: {:type :word
+           :text \"text\"
+           ...other word attributes...}"
+  [sentence-text]
+  {:type :sentence,
+   :elements (for [element-text (split-sentence-text-into-elements sentence-text)
+                   :let [words (split element-text #"\W")]]
+               (case (count words)
+                 1 (create-word (first words))
+                 (create-phrase words)))})
 
 
 ;; Environment

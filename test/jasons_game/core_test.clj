@@ -20,15 +20,15 @@
        (fact "Personal pronouns are correctly identified"
              (parse-sentence-text "I love you")
              => '{:type :sentence
-                  :phrases ( {:type :phrase, :words ({:type :word, :target :speaker, :text "I"})}
-                             {:type :phrase, :words ({:type :word, :text "love"})}
-                             {:type :phrase, :words ({:type :word, :target :addressee, :text "you"})})}))
+                  :elements ( {:type :word, :text "I", :target :speaker}
+                              {:type :word, :text "love"}
+                              {:type :word, :text "you", :target :addressee})}))
 
 (facts "about binding"
        (fact "Target values should be replaced with values in the environment"
              (let [sentence (parse-sentence-text "I love you")]
                (bind-to-env sentence env))
              => '{:type :sentence
-                  :phrases ( {:type :phrase, :words ({:type :word, :target {:name "Jason"}, :text "I"})}
-                             {:type :phrase, :words ({:type :word, :text "love"})}
-                             {:type :phrase, :words ({:type :word, :target {:name "Daddy"}, :text "you"})})}))
+                  :elements ( {:type :word, :text "I", :target {:name "Jason"}}
+                              {:type :word, :text "love"}
+                              {:type :word, :text "you", :target {:name "Daddy"}})}))
