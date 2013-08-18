@@ -1,21 +1,34 @@
+var z = 0;
+
 void setup() {
   size(window.innerWidth, window.innerHeight, P3D);
-  println(jasons_game.core.parse_sentence_text("I love you"));
 }
 
 void draw() {
-  background(100);
-  
-//  pushStyle();
-  fill(0);
-  rect(0, 0, width, 100);
-//  popStyle();
-  
-//  noStroke();
-////  noFill();
-//  fill(255);
-//  lights();
-//  translate(mouseX, mouseY, 0);
-//  sphere(100);
-  
+	background(200);
+	lights();
+	
+	drawActor();
+}
+
+void drawActor() {
+	translate(mouseX, mouseY, z);
+//	pushStyle();
+	noStroke();
+	fill(255);
+	sphere(100);
+//	popStyle();
+}
+
+void mousePressed() {
+	println("yo")
+}
+
+void keyPressed() {
+	if (key == CODED) {
+		switch (keyCode) {
+		case UP: z += 20; break;
+		case DOWN: z -= 20; break;
+		}
+	}
 }
