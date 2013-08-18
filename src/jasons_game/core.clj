@@ -1,5 +1,5 @@
 (ns jasons_game.core
-  (:require [clojure.string :refer [join split]]
+  (:require [clojure.string :refer [join lower-case split]]
             [clojure.walk :refer [postwalk postwalk-replace]]))
 
 
@@ -34,7 +34,7 @@
                                               pronoun-info (pronouns pronoun-type)]
                                           (let [pronoun (first pronoun-info)
                                                 pronoun-target (second pronoun-info)]
-                                            (when (= (.toLowerCase pronoun) (.toLowerCase word-text))
+                                            (when (= (lower-case pronoun) (lower-case word-text))
                                               {:target pronoun-target})))))))
 
 (defn create-phrase
