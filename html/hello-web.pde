@@ -1,6 +1,3 @@
-var core = jasons_game.core;
-var ui = jasons_game.ui;
-
 var z = 0;
 var inc = 20;
 
