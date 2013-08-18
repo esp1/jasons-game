@@ -13,9 +13,17 @@
                            "your" :addressee}})
 
 
-;; Parsing
-;;; Sentence is a sequence of Phrases or Words
-;;; Sentence, Phrase, and Word can have metadata
+;; Parsing text into sentence structures
+
+(defn split-phrase-text-into-words
+  "Splits a phrase into a collection of individual words"
+  [phrase-text]
+  (split phrase-text #"\W"))
+  
+(defn split-sentence-text-into-elements
+  "Splits a sentence text string into a collection of individual phrases and words"
+  [sentence-text]
+  (split sentence-text #"\W"))
 
 (defn create-word
   "return a map with various attributes of word"
@@ -29,25 +37,14 @@
                                             (when (= (.toLowerCase pronoun) (.toLowerCase word-text))
                                               {:target pronoun-target})))))))
 
-(defn split-phrase-text-into-words
-  [phrase-text]
-  [phrase-text])
-
 (defn create-phrase
   [phrase-text]
   {:type :phrase
    :words (for [word-text (split-phrase-text-into-words phrase-text)]
             (create-word word-text))})
-  
-(defn split-sentence-text-into-elements
-  [sentence-text]
-  (split sentence-text #"\W"))
 
 (defn parse-sentence-text
   "Takes in a sentence string and produces a sentence as a collection of phrases and words.
-  
-  The input sentence string may be annotated to indicate phrases. (TBD)
-  
   The produced sentence, phrases, and words are each maps which have the following structures:
 
     Sentence: {:type :sentence
@@ -70,7 +67,7 @@
                  (create-phrase words)))})
 
 
-;; Sentence structure to text
+;; Extracting text from sentence structures
 
 (defmulti text
   "Extracts the text of a sentence, phrase, or word"

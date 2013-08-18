@@ -16,7 +16,10 @@
 ;; Environment
 (def env {:speaker jason, :addressee daddy})
 
-(facts "about parsing text"
+
+;; Tests
+
+(facts "about parsing text into sentence structures"
        (fact "Personal pronouns are correctly identified"
              (parse-sentence-text "I love you")
              => '{:type :sentence
@@ -24,7 +27,13 @@
                               {:type :word, :text "love"}
                               {:type :word, :text "you", :target :addressee})}))
 
-(facts "about binding"
+(facts "about extracting text from sentence structures"
+       (fact "Text can be retrieved from a sentence structure"
+             (let [sentence (parse-sentence-text "I love you")]
+               (text sentence))
+             => "I love you"))
+
+(facts "about environment binding"
        (fact "Target values should be replaced with values in the environment"
              (let [sentence (parse-sentence-text "I love you")]
                (bind-to-env sentence env))
@@ -32,9 +41,3 @@
                   :elements ( {:type :word, :text "I", :target {:name "Jason"}}
                               {:type :word, :text "love"}
                               {:type :word, :text "you", :target {:name "Daddy"}})}))
-
-(facts "about reconstructing text from sentence structures"
-       (fact "Text can be retrieved from a sentence structure"
-             (let [sentence (parse-sentence-text "I love you")]
-               (text sentence))
-             => "I love you"))
