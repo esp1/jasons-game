@@ -32,3 +32,9 @@
                   :elements ( {:type :word, :text "I", :target {:name "Jason"}}
                               {:type :word, :text "love"}
                               {:type :word, :text "you", :target {:name "Daddy"}})}))
+
+(facts "about reconstructing text from sentence structures"
+       (fact "Text can be retrieved from a sentence structure"
+             (let [sentence (parse-sentence-text "I love you")]
+               (text sentence))
+             => "I love you"))

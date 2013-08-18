@@ -1,7 +1,6 @@
 (ns jasons_game.core
-  (:require [clojure.string :refer [split]]
-            [clojure.pprint :refer [pprint]]
-            [clojure.walk :refer [postwalk-replace]]))
+  (:require [clojure.string :refer [join split]]
+            [clojure.walk :refer [postwalk postwalk-replace]]))
 
 
 ;; Parts of speech
@@ -69,6 +68,16 @@
                (case (count words)
                  1 (create-word (first words))
                  (create-phrase words)))})
+
+
+;; Sentence structure to text
+
+(defmulti text
+  "Extracts the text of a sentence, phrase, or word"
+  :type)
+(defmethod text :sentence [sentence] (join " " (map text (sentence :elements))))
+(defmethod text :phrase [phrase] (join " " (map text (phrase :words))))
+(defmethod text :word [word] (word :text))
 
 
 ;; Environment
