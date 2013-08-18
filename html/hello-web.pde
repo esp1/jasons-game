@@ -16,16 +16,20 @@ void draw() {
 }
 
 void drawActor() {
+	pushMatrix();
+	
+	setStyle("actor");
+
 	translate(mouseX, mouseY, z);
-//	pushStyle();
-	noStroke();
-	fill(255);
 	sphere(100);
-//	popStyle();
+	
+	popMatrix();
 }
 
-void doThing() {
-	alert("pow");
+void setStyle(name) {
+	var c = ui.color(name); if (c) color(c[0], c[1], c[2], c[3]);
+	var s = ui.stroke(name); if (s) stroke(s[0], s[1], s[2], s[3]); else noStroke();
+	var f = ui.fill(name); if (f) fill(f[0], f[1], f[2], f[3]); else noFill();
 }
 
 void mousePressed() {
@@ -39,8 +43,8 @@ void mouseMoved() {
 void keyPressed() {
 	if (key == CODED) {
 		switch (keyCode) {
-		case UP: z += 20; println("z = " + z); break;
-		case DOWN: z -= 20; println("z = " + z); break;
+		case UP: z += 20; break;
+		case DOWN: z -= 20; break;
 		}
 	}
 }
