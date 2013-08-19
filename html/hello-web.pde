@@ -9,32 +9,52 @@ void draw() {
 	background(200);
 	lights();
 	
-	drawActor();
+	drawActor(mouseX, mouseY, z);
 }
 
-void drawActor() {
+// Draw objects
+
+void drawActor(int x, int y, int z) {
 	pushMatrix();
 	
 	setStyle("actor");
 
-	translate(mouseX, mouseY, z);
+	translate(x, y, z);
 	sphere(100);
 	
 	popMatrix();
 }
 
-void setStyle(name) {
-	var c = ui.color(name); if (c) color(c[0], c[1], c[2], c[3]);
-	var s = ui.stroke(name); if (s) stroke(s[0], s[1], s[2], s[3]); else noStroke();
-	var f = ui.fill(name); if (f) fill(f[0], f[1], f[2], f[3]); else noFill();
+/**
+ * Draws a word bubble over the target point
+ */
+void drawWordBubble(targetPoint) {
+	pushMatrix();
+	popMatrix();
 }
 
+// Styles
+
+void setStyle(String name) {
+	var c = ui.color_for_name(name);
+	if (c != null) color(c[0], c[1], c[2], c[3]);
+	
+	var s = ui.stroke_for_name(name);
+	if (s != null) stroke(s[0], s[1], s[2], s[3]);
+	else noStroke();
+	
+	var f = ui.fill_for_name(name);
+	if (f != null) fill(f[0], f[1], f[2], f[3]);
+	else noFill();
+}
+
+// Event handling
+
 void mousePressed() {
-	ui.mousePressed(this, mouseButton, mouseX, mouseY, pmouseX, pmouseY);
 }
 
 void mouseMoved() {
-	ui.mouseMoved(this, mouseButton, mouseX, mouseY, pmouseX, pmouseY);
+	ui.show_mouse_coords(mouseButton, mouseX, mouseY);
 }
 
 void keyPressed() {

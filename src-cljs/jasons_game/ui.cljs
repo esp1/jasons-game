@@ -1,13 +1,6 @@
 (ns jasons_game.ui
   (:require-macros [dommy.macros :refer [sel sel1]])
-  (:require [dommy.utils :as utils]
-            [dommy.core :as dommy]))
-
-(defn text-box [] (sel1 :#text-box))
-
-(defn set-text!
-  [node]
-  (dommy/replace-contents! (text-box) node))
+  (:require [dommy.core :as dommy]))
 
 
 ;; Styles
@@ -23,17 +16,18 @@
                              4 (array (color 0) (color 1) (color 2) (color 3)))
              (number? color) (array color color color 255))))
 
-(defn color [name] (to-color-array ((styles name) :color)))
-(defn stroke [name] (to-color-array ((styles name) :stroke)))
-(defn fill [name] (to-color-array ((styles name) :fill)))
+(defn color-for-name [name] (to-color-array ((styles name) :color)))
+(defn stroke-for-name [name] (to-color-array ((styles name) :stroke)))
+(defn fill-for-name [name] (to-color-array ((styles name) :fill)))
 
 
-;; Event handlers
+;; Text box
 
-(defn mouseMoved
-  [sketch mouseButton mouseX mouseY pmouseX pmouseY]
-  (set-text! [:div mouseButton "->" [:span.highlight mouseX] ":" [:span.highlight mouseY]]))
+(defn text-box [] (sel1 :#text-box))
 
-(defn mousePressed
-  [sketch mouseButton mouseX mouseY pmouseX pmouseY]
-  (.doThing sketch))
+(defn set-text!
+  [node]
+  (dommy/replace-contents! (text-box) node))
+
+(defn show-mouse-coords [mouse-button mouse-x mouse-y]
+  (set-text! [:div mouse-button "->" [:span.highlight mouse-x] ":" [:span.highlight mouse-y]]))
