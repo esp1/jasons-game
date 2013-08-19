@@ -5,9 +5,9 @@
 
 ;; Styles
 
-(def styles {"actor" {:stroke 0, :fill [0, 0, 255]}})
+(def styles {"actor" {:stroke 0, :fill [255, 0, 0]}})
 
-(defn to-color-array
+(defn to-js-color
   "Converts a color spec to a native javascript color array.
   A color spec can have any of the following forms:
   
@@ -21,7 +21,6 @@
                              3 (array (color 0) (color 1) (color 2) 255))
              (number? color) (array color color color 255))))
 
-(defn color-for [name] (to-color-array ((styles name) :color)))
 (defn stroke-for [name] (to-color-array ((styles name) :stroke)))
 (defn fill-for [name] (to-color-array ((styles name) :fill)))
 

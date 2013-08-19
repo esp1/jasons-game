@@ -41,9 +41,6 @@ void drawWordBubble(targetPoint) {
 // Styles
 
 void setStyle(String name) {
-	var c = ui.color_for(name);
-	if (c != null) color(c[0], c[1], c[2], c[3]);
-	
 	var s = ui.stroke_for(name);
 	if (s != null) stroke(s[0], s[1], s[2], s[3]);
 	else noStroke();
@@ -56,10 +53,10 @@ void setStyle(String name) {
 // Event handling
 
 void mousePressed() {
+	ui.show_mouse_coords(mouseButton, mouseX, mouseY);
 }
 
 void mouseMoved() {
-	ui.show_mouse_coords(mouseButton, mouseX, mouseY);
 }
 
 void keyPressed() {
