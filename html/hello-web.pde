@@ -1,3 +1,8 @@
+/**
+ * Processing code for UI rendering within the canvas.
+ * Everything else (model operations, DOM manipulation, various calculations) is done by delegating to ClojureScript.
+ */
+
 var z = 0;
 var inc = 20;
 
