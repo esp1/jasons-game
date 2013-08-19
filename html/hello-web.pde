@@ -41,14 +41,14 @@ void drawWordBubble(targetPoint) {
 // Styles
 
 void setStyle(String name) {
-	var c = ui.color_for_name(name);
+	var c = ui.color_for(name);
 	if (c != null) color(c[0], c[1], c[2], c[3]);
 	
-	var s = ui.stroke_for_name(name);
+	var s = ui.stroke_for(name);
 	if (s != null) stroke(s[0], s[1], s[2], s[3]);
 	else noStroke();
 	
-	var f = ui.fill_for_name(name);
+	var f = ui.fill_for(name);
 	if (f != null) fill(f[0], f[1], f[2], f[3]);
 	else noFill();
 }
