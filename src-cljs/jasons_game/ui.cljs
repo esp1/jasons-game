@@ -7,8 +7,8 @@
 
 (def styles {"actor" {:stroke 0, :fill [255, 0, 0]}})
 
-(defn to-js-color
-  "Converts a color spec to a native javascript color array.
+(defn to-processing-color
+  "Converts a color spec to a processing color, which is represented by a native javascript color array.
   A color spec can have any of the following forms:
   
   [ R G B A ] -> [ R G B A ]
@@ -21,8 +21,8 @@
                              3 (array (color 0) (color 1) (color 2) 255))
              (number? color) (array color color color 255))))
 
-(defn stroke-for [name] (to-color-array ((styles name) :stroke)))
-(defn fill-for [name] (to-color-array ((styles name) :fill)))
+(defn stroke-for [name] (to-processing-color ((styles name) :stroke)))
+(defn fill-for [name] (to-processing-color ((styles name) :fill)))
 
 
 ;; Text box
