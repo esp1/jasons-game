@@ -4,7 +4,7 @@
             [compojure.route :as route]))
 
 (defroutes app-routes
-  (GET "/" [] "This is Jason's game")
+;  (GET "/" [] "This is Jason's game")
   (route/resources "/")
   (route/not-found "Not Found"))
 
