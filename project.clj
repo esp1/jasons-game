@@ -12,7 +12,7 @@
   :profiles {:dev {:dependencies [[midje "1.6-beta1"]
                                   [ring-mock "0.1.5"]]}}
   :cljsbuild {:repl-listen-port 9000
-              :repl-launch-commands {"my-launch" ["firefox" "-jsconsole" "http://localhost/my-page"]}
+              :repl-launch-commands {"my-launch" ["firefox" "-jsconsole" "http://localhost:3000/"]}
               :crossovers [jasons_game.core
                            jasons-game.world]
               :crossover-path "src-cljs"
