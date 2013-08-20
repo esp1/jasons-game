@@ -7,7 +7,7 @@
 ;; Styles
 
 (def styles {:cursor {:stroke 0}
-             :actor {:stroke 0, :fill [255, 0, 0]}
+             :actor {:stroke 0, :fill [0, 255, 0]}
              :speech-balloon {:fill [0, 0, 255]}
              :words {:fill 255}})
 
@@ -49,22 +49,23 @@
 
 ;; Sketch
 
-(defn draw-begin [name x y]
+(defn draw [name x y f]
   (s/push-style)
   (set-style name)
   (s/push-matrix)
-  (s/translate x y))
-
-(defn draw-end []
+  (s/translate x y)
+  
+  (f)
+  
   (s/pop-matrix)
   (s/pop-style))
 
 (def cursor-size 10)
 (defn draw-cursor [x y]
-  (draw-begin :cursor x y)
-  (s/line (- cursor-size) 0, cursor-size 0)
-  (s/line 0 (- cursor-size), 0 cursor-size)
-  (draw-end))
+  (draw :cursor x y
+        (fn []
+          (s/line (- cursor-size) 0, cursor-size 0)
+          (s/line 0 (- cursor-size), 0 cursor-size))))
 
 (def offset 10)
 (def point-width 20)
@@ -72,30 +73,29 @@
 (defn draw-speech-balloon [speech x y]
   (let [balloon-width (+ (s/text-width speech) 40)
         balloon-height (+ (s/text-ascent) (s/text-descent) 40)]
-    (draw-begin :speech-balloon x y)
-    (s/translate (- (/ balloon-width 2)) (- (+ offset point-height balloon-height)))
-    
-    (s/begin-shape)
-    (s/vertex 0 0)
-    (s/vertex balloon-width 0)
-    (s/vertex balloon-width balloon-height)
-    (s/vertex (+ (/ balloon-width 2) point-width) balloon-height)
-    (s/vertex (/ balloon-width 2) (+ balloon-height point-height))
-    (s/vertex (/ balloon-width 2) balloon-height)
-    (s/vertex 0 balloon-height)
-    (s/end-shape)
-    
-    (set-style :words)
-    (s/text speech 20 (+ 20 (s/text-ascent)))
-    
-    (draw-end)))
+    (draw :speech-balloon x y
+          (fn []
+            (s/translate (- (/ balloon-width 2)) (- (+ offset point-height balloon-height)))
+            
+            (s/begin-shape)
+            (s/vertex 0 0)
+            (s/vertex balloon-width 0)
+            (s/vertex balloon-width balloon-height)
+            (s/vertex (+ (/ balloon-width 2) point-width) balloon-height)
+            (s/vertex (/ balloon-width 2) (+ balloon-height point-height))
+            (s/vertex (/ balloon-width 2) balloon-height)
+            (s/vertex 0 balloon-height)
+            (s/end-shape)
+            
+            (set-style :words)
+            (s/text speech 20 (+ 20 (s/text-ascent)))))))
 
 (def actor-radius 100)
 (defn draw-actor [x y]
-  (draw-begin :actor x y)
-  (s/ellipse 0 0 actor-radius actor-radius)
-  (draw-speech-balloon "How are you" 0 (- (/ actor-radius 2)))
-  (draw-end))
+  (draw :actor x y
+        (fn []
+          (s/ellipse 0 0 actor-radius actor-radius)
+          (draw-speech-balloon "How are you" 0 (- (/ actor-radius 2))))))
 
 (def sketchy {:setup (fn []
                        (s/size (.-innerWidth js/window) (.-innerHeight js/window))
