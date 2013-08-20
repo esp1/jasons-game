@@ -7,7 +7,7 @@
 ;; Styles
 
 (def styles {:cursor {:stroke 0}
-             :actor {:stroke 0, :fill [0, 255, 0]}
+             :person {:stroke 0, :fill [0, 255, 0]}
              :speech-balloon {:fill [0, 0, 255]}
              :words {:fill 255}})
 
@@ -47,7 +47,9 @@
 
 ;; Sketch
 
-(defn draw [name x y f]
+(defn draw
+  "Lookup and apply styles for named object, translate origin to given coordinate, and draw using supplied function"
+  [name x y f]
   (s/push-style)
   (set-style name)
   (s/push-matrix)
@@ -58,14 +60,17 @@
   (s/pop-matrix)
   (s/pop-style))
 
-(defn draw-shape [vertices]
+(defn draw-shape
+  [vertices]
   (s/begin-shape)
   (doseq [vertex vertices]
     (apply s/vertex vertex))
   (s/end-shape))
 
 (def cursor-size 10)
-(defn draw-cursor [x y]
+(defn draw-cursor
+  "Draws a cursor at the specified coordinate"
+  [x y]
   (draw :cursor x y
         (fn []
           (s/line (- cursor-size) 0, cursor-size 0)
@@ -74,7 +79,9 @@
 (def speech-balloon-properties {:offset 10
                                 :point-width 20
                                 :point-height 40})
-(defn draw-speech-balloon [speech x y]
+(defn draw-speech-balloon
+  "Draws a speech balloon over the specified coordinate"
+  [speech x y]
   (let [p speech-balloon-properties
         balloon-width (+ (s/text-width speech) 40)
         balloon-height (+ (s/text-ascent) (s/text-descent) 40)]
@@ -94,12 +101,14 @@
             (set-style :words)
             (s/text speech 20 (+ 20 (s/text-ascent)))))))
 
-(def actor-radius 100)
-(defn draw-actor [x y]
-  (draw :actor x y
+(def person-radius 100)
+(defn draw-person
+  "Draws a person at the specified coordinate"
+  [x y]
+  (draw :person x y
         (fn []
-          (s/ellipse 0 0 actor-radius actor-radius)
-          (draw-speech-balloon "How are you" 0 (- (/ actor-radius 2))))))
+          (s/ellipse 0 0 person-radius person-radius)
+          (draw-speech-balloon "How are you" 0 (- (/ person-radius 2))))))
 
 (def sketchy {:setup (fn []
                        (s/size (.-innerWidth js/window) (.-innerHeight js/window))
@@ -108,7 +117,7 @@
                       (let [mx (s/mouse-x), my (s/mouse-y)]
                         (s/background 100)
                         
-                        (draw-actor mx my)
+                        (draw-person mx my)
                         (draw-cursor mx my)
                         
                         (show-coords mx my)))})
