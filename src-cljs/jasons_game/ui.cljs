@@ -39,9 +39,7 @@
 
 ;; Text box
 
-(defn text-box [] (sel1 :#text-box))
-
-(defn set-text-box! [node] (dommy/replace-contents! (text-box) node))
+(defn set-text-box! [node] (dommy/replace-contents! (sel1 :#text-box) node))
 
 (defn show-coords [x y]
   (set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))
@@ -82,7 +80,8 @@
         balloon-height (+ (s/text-ascent) (s/text-descent) 40)]
     (draw :speech-balloon x y
           (fn []
-            (s/translate (- (/ balloon-width 2)) (- (+ (p :offset) (p :point-height) balloon-height)))
+            (s/translate (- (/ balloon-width 2))
+                         (- (+ (p :offset) (p :point-height) balloon-height)))
             
             (draw-shape [[0 0]
                          [balloon-width 0]
