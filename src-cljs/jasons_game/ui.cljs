@@ -8,8 +8,8 @@
 ;; Styles
 
 (def styles {:cursor {:stroke 0}
-             :person {:stroke 0, :fill [255, 0, 0]}
-             :speech-balloon {:fill [0, 0, 255]}
+             :person {:stroke 0, :fill [0 255 0]}
+             :speech-balloon {:fill [0 0 255]}
              :words {:fill 255}})
 
 (defn to-processing-color
@@ -121,8 +121,7 @@
                         (s/background 100)
                         
                         (draw-person mx my)
-                        (let [img (s/load-image "logo-color-255x75.png")]
-                          (s/image img 100 100))
+                        (s/image (s/load-image "logo-color-255x75.png") 100 100)
                         (draw-cursor mx my)
                         
                         (show-coords mx my)))})
