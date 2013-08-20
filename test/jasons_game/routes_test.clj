@@ -1,14 +1,16 @@
 (ns jasons_game.routes-test
-  (:use clojure.test
-        ring.mock.request
-        jasons_game.routes))
+  (:require [midje.sweet :refer :all]
+            [ring.mock.request :refer :all]
+            [jasons_game.routes :refer :all]))
 
-(deftest test-app
-  (testing "main route"
-    (let [response (app (request :get "/"))]
-      (is (= (:status response) 200))
-      (is (= (:body response) "Hello World"))))
+(facts "about routes"
+  (fact "main route should return 200 ok"
+        (let [response (app (request :get "/"))]
+          (:status response))
+        => 200)
+;      (is (= (:body response) "Hello World"))))
 
-  (testing "not-found route"
-    (let [response (app (request :get "/invalid"))]
-      (is (= (:status response) 404)))))
+  (fact "/invalid should return a 404 not found error"
+        (let [response (app (request :get "/invalid"))]
+          (:status response))
+        => 404))
