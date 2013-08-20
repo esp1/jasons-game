@@ -60,6 +60,12 @@
   (s/pop-matrix)
   (s/pop-style))
 
+(defn draw-shape [vertices]
+  (s/begin-shape)
+  (doseq [vertex vertices]
+    (apply s/vertex vertex))
+  (s/end-shape))
+
 (def cursor-size 10)
 (defn draw-cursor [x y]
   (draw :cursor x y
@@ -67,25 +73,24 @@
           (s/line (- cursor-size) 0, cursor-size 0)
           (s/line 0 (- cursor-size), 0 cursor-size))))
 
-(def offset 10)
-(def point-width 20)
-(def point-height 40)
+(def speech-balloon-properties {:offset 10
+                                :point-width 20
+                                :point-height 40})
 (defn draw-speech-balloon [speech x y]
-  (let [balloon-width (+ (s/text-width speech) 40)
+  (let [p speech-balloon-properties
+        balloon-width (+ (s/text-width speech) 40)
         balloon-height (+ (s/text-ascent) (s/text-descent) 40)]
     (draw :speech-balloon x y
           (fn []
-            (s/translate (- (/ balloon-width 2)) (- (+ offset point-height balloon-height)))
+            (s/translate (- (/ balloon-width 2)) (- (+ (p :offset) (p :point-height) balloon-height)))
             
-            (s/begin-shape)
-            (s/vertex 0 0)
-            (s/vertex balloon-width 0)
-            (s/vertex balloon-width balloon-height)
-            (s/vertex (+ (/ balloon-width 2) point-width) balloon-height)
-            (s/vertex (/ balloon-width 2) (+ balloon-height point-height))
-            (s/vertex (/ balloon-width 2) balloon-height)
-            (s/vertex 0 balloon-height)
-            (s/end-shape)
+            (draw-shape [[0 0]
+                         [balloon-width 0]
+                         [balloon-width balloon-height]
+                         [(+ (/ balloon-width 2) (p :point-width)) balloon-height]
+                         [(/ balloon-width 2) (+ balloon-height (p :point-height))]
+                         [(/ balloon-width 2) balloon-height]
+                         [0 balloon-height]])
             
             (set-style :words)
             (s/text speech 20 (+ 20 (s/text-ascent)))))))
