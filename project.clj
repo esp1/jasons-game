@@ -8,7 +8,8 @@
   :profiles {:dev {:dependencies [[midje "1.6-beta1"]]}}
   :plugins [[lein-cljsbuild "0.3.2"]]
   :cljsbuild {
-              :crossovers [jasons_game.core]
+              :crossovers [jasons_game.core
+                           jasons-game.world]
               :crossover-path "src-cljs"
               :builds [{:source-paths ["src-cljs"]
                         :compiler {:output-to "html/js/main.js"
