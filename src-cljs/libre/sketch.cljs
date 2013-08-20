@@ -182,9 +182,7 @@
 
 
 (defn preload-image [imagename]
-  (. (.imageCatch
-      (.-sketch (.-externals  libre.sketch/*processing*)))
-     (add imagename)))
+  (. (-> *processing* .-externals .-sketch .-imageCache) (add imagename)))
 
 (defn load-image [imagename]
   (. *processing* (loadImage imagename)))

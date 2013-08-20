@@ -1,13 +1,14 @@
 (ns jasons_game.ui
   (:require-macros [dommy.macros :refer [sel sel1]])
   (:require [dommy.core :as dommy]
+            [jasons_game.world :as world]
             [libre.sketch :as s]))
 
 
 ;; Styles
 
 (def styles {:cursor {:stroke 0}
-             :person {:stroke 0, :fill [0, 255, 0]}
+             :person {:stroke 0, :fill [255, 0, 0]}
              :speech-balloon {:fill [0, 0, 255]}
              :words {:fill 255}})
 
@@ -60,7 +61,7 @@
   (s/pop-matrix)
   (s/pop-style))
 
-(defn draw-shape
+(defn shape
   [vertices]
   (s/begin-shape)
   (doseq [vertex vertices]
@@ -90,13 +91,13 @@
             (s/translate (- (/ balloon-width 2))
                          (- (+ (p :offset) (p :point-height) balloon-height)))
             
-            (draw-shape [[0 0]
-                         [balloon-width 0]
-                         [balloon-width balloon-height]
-                         [(+ (/ balloon-width 2) (p :point-width)) balloon-height]
-                         [(/ balloon-width 2) (+ balloon-height (p :point-height))]
-                         [(/ balloon-width 2) balloon-height]
-                         [0 balloon-height]])
+            (shape [[0 0]
+                    [balloon-width 0]
+                    [balloon-width balloon-height]
+                    [(+ (/ balloon-width 2) (p :point-width)) balloon-height]
+                    [(/ balloon-width 2) (+ balloon-height (p :point-height))]
+                    [(/ balloon-width 2) balloon-height]
+                    [0 balloon-height]])
             
             (set-style :words)
             (s/text speech 20 (+ 20 (s/text-ascent)))))))
@@ -112,12 +113,16 @@
 
 (def sketchy {:setup (fn []
                        (s/size (.-innerWidth js/window) (.-innerHeight js/window))
-                       (s/text-font (s/create-font "Arial" 32)))
+                       (s/text-font (s/create-font "Arial" 32))
+                       (s/preload-image "logo-color-255x75.png"))
+              
               :draw (fn []
                       (let [mx (s/mouse-x), my (s/mouse-y)]
                         (s/background 100)
                         
                         (draw-person mx my)
+                        (let [img (s/load-image "logo-color-255x75.png")]
+                          (s/image img 100 100))
                         (draw-cursor mx my)
                         
                         (show-coords mx my)))})
