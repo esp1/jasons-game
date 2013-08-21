@@ -48,11 +48,15 @@
 
 (defn draw-it
   "Translate origin to location of thing, and draw using supplied function"
-  ([thing f] (draw-it (thing :name) (thing :location) f))
-  ([name [x y] f] (s/push-matrix)
-                  (s/translate x y)
-                  (f)  ; actually draw
-                  (s/pop-matrix)))
+  ([location f] (draw-it location {} f))
+  ([[x y] style-attrs f] (s/push-matrix)
+                         (s/translate x y)
+                         
+                         (if (empty? style-attrs)
+                           (f)
+                           (style style-attrs f))
+                         
+                         (s/pop-matrix)))
 
 (defn shape
   [vertices]

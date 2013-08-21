@@ -14,10 +14,10 @@
   "Draws a cursor at the specified coordinate"
   [x y]
   ; draw crosshairs
-  (d/draw-it :cursor [x y] (fn []
-                             (d/style {:stroke 0} (fn []
-                                                    (s/line (- cursor-size) 0, cursor-size 0)
-                                                    (s/line 0 (- cursor-size), 0 cursor-size)))))
+  (d/draw-it [x y] (fn []
+                     (d/style {:stroke 0} (fn []
+                                            (s/line (- cursor-size) 0, cursor-size 0)
+                                            (s/line 0 (- cursor-size), 0 cursor-size)))))
   ; display coordinates in text box
   (d/set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))
 
