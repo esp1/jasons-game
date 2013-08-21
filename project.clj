@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [prismatic/dommy "0.1.1"]
+                 [ring-middleware-format "0.3.1"]
                  [compojure "1.1.5"]
                  [cljs-ajax "0.1.6"]]
   :plugins [[lein-cljsbuild "0.3.2"]

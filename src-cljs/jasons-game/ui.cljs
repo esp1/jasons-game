@@ -1,10 +1,10 @@
 (ns jasons-game.ui
   (:require-macros [dommy.macros :refer [sel sel1]])
-  (:require [clojure.string :refer [split]]
+  (:require [jasons-game.world :as world]
+            [clojure.browser.repl :as repl]
+            [clojure.string :refer [split]]
             [ajax.core :refer [GET]]
             [dommy.core :as dommy]
-            [jasons-game.world :as world]
-            [clojure.browser.repl :as repl]
             [libre.sketch :as s]))
 
 ;; Styles
@@ -113,12 +113,16 @@
 
 (def images {})
 
-(defn load-image [name]
-  (if-let [img (images name)]
-    img
-    (GET (str "/image/" name) {:handler (fn [response]
-                                          (let [loaded-image (s/load-image response)]
-                                            (def images (assoc images name loaded-image))))})))
+(defn load-image [id]
+  (if-let [img (images id)]
+    (if (symbol? img)
+      (let [ext (last (split id #"\."))
+            url (str "data:image/" ext ";base64," img)
+            loaded-image (s/load-image url)]
+        (def images (assoc images id loaded-image)))
+      img)
+    (GET (str "/image/" id) {:handler (fn [response]
+                                        (def images (assoc images id response)))})))
 
 (defn init []
   (js/Processing.
@@ -126,7 +130,6 @@
     (s/sketch-init {:setup (fn []
                              (s/size (.-innerWidth js/window) (.-innerHeight js/window))
                              (s/text-font (s/create-font "Arial" 32)))
-;                             (s/preload-image "logo-color-255x75.png"))
                     
                     :draw (fn []
                             (let [mx (s/mouse-x), my (s/mouse-y)]

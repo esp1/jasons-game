@@ -2,13 +2,13 @@
   (:use compojure.core)
   (:require [clojure.java.io :refer [file reader]]
             [compojure.handler :as handler]
-            [compojure.route :as route]))
+            [compojure.route :as route]
+            [ring.middleware.format-response :refer [wrap-clojure-response]]))
 
 (defn get-image [id]
   (let [f (file "resources/public" (str id ".base64"))]
     (when (.exists f)
-      (let [ext (last (clojure.string/split id #"\."))]
-        (str "data:image/" ext ";base64," (slurp f))))))
+      (slurp f))))
 
 (defroutes app-routes
   (GET "/image/:id" [id] (get-image id))
@@ -24,4 +24,6 @@
                     %)))))
 
 (def app
-  (wrap-redirects (handler/site app-routes)))
+  (-> (handler/site app-routes)
+    wrap-redirects
+    wrap-clojure-response))
