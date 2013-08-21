@@ -36,4 +36,7 @@
 (defn populate-world []
   (add-thing {:type :person
               :name "Edwin"
-              :location [400 200]}))
+              :location [400 200]})
+  (add-thing {:type :person
+              :name "Christine"
+              :location [700 300]}))
