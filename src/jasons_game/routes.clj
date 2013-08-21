@@ -15,11 +15,14 @@
   (route/resources "/")
   (route/not-found "Not Found"))
 
-(defn wrap-dir-index [handler]
+(defn wrap-redirects [handler]
   (fn [req]
     (handler
       (update-in req [:uri]
-                 #(if (= "/" %) "/index.html" %)))))
+                 #(case %
+                    "/" "/index.html"
+                    "/repl" "/repl.html"
+                    %)))))
 
 (def app
-  (wrap-dir-index (handler/site app-routes)))
+  (wrap-redirects (handler/site app-routes)))
