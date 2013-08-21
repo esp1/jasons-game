@@ -1,6 +1,6 @@
-(ns jasons_game.core-test
+(ns jasons-game.core-test
   (:require [midje.sweet :refer :all]
-            [jasons_game.core :refer :all]))
+            [jasons-game.core :refer :all]))
 
 ;; Sentence text
 ;(def sentence-text "I am happy to meet you")

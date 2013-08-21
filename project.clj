@@ -9,10 +9,10 @@
                  [cljs-ajax "0.1.6"]]
   :plugins [[lein-cljsbuild "0.3.2"]
             [lein-ring "0.8.5"]]
-  :ring {:handler jasons_game.routes/app}
+  :ring {:handler jasons-game.routes/app}
   :profiles {:dev {:dependencies [[midje "1.6-beta1"]
                                   [ring-mock "0.1.5"]]}}
-  :cljsbuild {:crossovers [jasons_game.core
+  :cljsbuild {:crossovers [jasons-game.core
                            jasons-game.world]
               :crossover-path "crossover-cljs"
               :builds [{:source-paths ["src-cljs"]

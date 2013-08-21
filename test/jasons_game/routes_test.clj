@@ -1,7 +1,7 @@
-(ns jasons_game.routes-test
+(ns jasons-game.routes-test
   (:require [midje.sweet :refer :all]
             [ring.mock.request :refer :all]
-            [jasons_game.routes :refer :all]))
+            [jasons-game.routes :refer :all]))
 
 (facts "about routes"
   (fact "main route should return 200 ok"

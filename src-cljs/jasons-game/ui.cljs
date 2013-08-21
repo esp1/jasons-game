@@ -1,12 +1,11 @@
-(ns jasons_game.ui
+(ns jasons-game.ui
   (:require-macros [dommy.macros :refer [sel sel1]])
   (:require [clojure.string :refer [split]]
             [ajax.core :refer [GET]]
             [dommy.core :as dommy]
-            [jasons_game.world :as world]
+            [jasons-game.world :as world]
             [clojure.browser.repl :as repl]
             [libre.sketch :as s]))
-
 
 ;; Styles
 

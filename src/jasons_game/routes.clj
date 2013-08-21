@@ -1,4 +1,4 @@
-(ns jasons_game.routes
+(ns jasons-game.routes
   (:use compojure.core)
   (:require [clojure.java.io :refer [file reader]]
             [compojure.handler :as handler]

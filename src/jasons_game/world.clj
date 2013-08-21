@@ -1,4 +1,4 @@
-(ns jasons_game.world)
+(ns jasons-game.world)
 
 ;; World
 ; The world is a map of object names to objects.

@@ -19,7 +19,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="ccw.LEININGEN_CONTAINER">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="jasons_game/target/native/macosx/x86_64"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="jasons-game/target/native/macosx/x86_64"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="target/classes">

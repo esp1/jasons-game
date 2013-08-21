@@ -1,4 +1,4 @@
-(ns jasons_game.core
+(ns jasons-game.core
   (:require [clojure.string :refer [join lower-case split]]
             [clojure.walk :refer [postwalk postwalk-replace]]))
 
