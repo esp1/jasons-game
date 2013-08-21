@@ -21,14 +21,11 @@
                              3 (array (color 0) (color 1) (color 2) 255))
              (number? color) (array color color color 255))))
 
-(defn stroke-for [attrs] (to-processing-color (attrs :stroke)))
-(defn fill-for [attrs] (to-processing-color (attrs :fill)))
-
 (defn set-style [attrs]
-  (if-let [[r g b a] (stroke-for attrs)]
+  (if-let [[r g b a] (to-processing-color (attrs :stroke))]
     (s/stroke r g b a)
     (s/no-stroke))
-  (if-let [[r g b a] (fill-for attrs)]
+  (if-let [[r g b a] (to-processing-color (attrs :fill))]
     (s/fill r g b a)
     (s/no-fill)))
 

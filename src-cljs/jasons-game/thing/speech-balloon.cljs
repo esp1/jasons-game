@@ -17,15 +17,17 @@
                                 (- (+ offset point-height balloon-height)))
                    
                    ; draw balloon
-                   (d/style {:fill [0 0 255]} (fn []
-                                                (d/shape [[0 0]
-                                                          [balloon-width 0]
-                                                          [balloon-width balloon-height]
-                                                          [(+ (/ balloon-width 2) point-width) balloon-height]
-                                                          [(/ balloon-width 2) (+ balloon-height point-height)]
-                                                          [(/ balloon-width 2) balloon-height]
-                                                          [0 balloon-height]])))
+                   (d/style {:stroke 0, :fill 255}
+                            (fn []
+                              (d/shape [[0 0]
+                                        [balloon-width 0]
+                                        [balloon-width balloon-height]
+                                        [(+ (/ balloon-width 2) point-width) balloon-height]
+                                        [(/ balloon-width 2) (+ balloon-height point-height)]
+                                        [(/ balloon-width 2) balloon-height]
+                                        [0 balloon-height]])))
                    
                    ; draw text
-                   (d/style {:fill 255} (fn []
-                                          (s/text speech 20 (+ 20 (s/text-ascent)))))))))
+                   (d/style {:fill 50}
+                            (fn []
+                              (s/text speech 20 (+ 20 (s/text-ascent)))))))))
