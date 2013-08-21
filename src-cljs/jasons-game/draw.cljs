@@ -64,39 +64,6 @@
     (apply s/vertex vertex))
   (s/end-shape))
 
-(def cursor-size 10)
-(defn draw-cursor
-  "Draws a cursor at the specified coordinate"
-  [x y]
-  (draw-it :cursor [x y] (fn []
-                           (s/line (- cursor-size) 0, cursor-size 0)
-                           (s/line 0 (- cursor-size), 0 cursor-size)))
-  (set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))
-
-(def speech-balloon-properties {:offset 10
-                                :point-width 20
-                                :point-height 40})
-(defn draw-speech-balloon
-  "Draws a speech balloon over the specified coordinate"
-  [speech x y]
-  (let [p speech-balloon-properties
-        balloon-width (+ (s/text-width speech) 40)
-        balloon-height (+ (s/text-ascent) (s/text-descent) 40)]
-    (draw-it :speech-balloon [x y] (fn []
-                                     (s/translate (- (/ balloon-width 2))
-                                                  (- (+ (p :offset) (p :point-height) balloon-height)))
-                                     
-                                     (shape [[0 0]
-                                             [balloon-width 0]
-                                             [balloon-width balloon-height]
-                                             [(+ (/ balloon-width 2) (p :point-width)) balloon-height]
-                                             [(/ balloon-width 2) (+ balloon-height (p :point-height))]
-                                             [(/ balloon-width 2) balloon-height]
-                                             [0 balloon-height]])
-                                     
-                                     (set-style :words)
-                                     (s/text speech 20 (+ 20 (s/text-ascent)))))))
-
 (def images {})
 
 (defn load-image [id]
@@ -115,7 +82,13 @@
                                         ; can't call s/load-image here because we're not in the dynamic scope for the *processing* binding
                                         (def images (assoc images id response)))})))  ; so just store the base64 image data in the map
 
+(defmulti draw-thing :type)
 
-(defmulti draw-thing
-  "Draws a thing. A thing is a map that minimally has a :type key"
-  :type)
+(def cursor-size 10)
+(defn draw-cursor
+  "Draws a cursor at the specified coordinate"
+  [x y]
+  (draw-it :cursor [x y] (fn []
+                           (s/line (- cursor-size) 0, cursor-size 0)
+                           (s/line 0 (- cursor-size), 0 cursor-size)))
+  (set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))

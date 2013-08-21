@@ -1,5 +1,6 @@
 (ns jasons-game.thing.person
   (:require [jasons-game.draw :as d]
+            [jasons-game.thing.speech-balloon :refer [draw-speech-balloon]]
             [libre.sketch :as s]))
 
 (def radius 50)
@@ -9,7 +10,7 @@
   [person]
   (d/draw-it person (fn []
                       (s/ellipse 0 0 diameter diameter)
-                      (d/draw-speech-balloon (str "My name is " (person :name)) 0 (- radius)))))
+                      (draw-speech-balloon (str "My name is " (person :name)) 0 (- radius)))))
 
 ;    (s/push-matrix)
 ;    (s/scale 2.0)

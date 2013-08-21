@@ -1,0 +1,27 @@
+(ns jasons-game.thing.speech-balloon
+  (:require [jasons-game.draw :as d]
+            [libre.sketch :as s]))
+
+(def offset 10)
+(def point-width 20)
+(def point-height 40)
+
+(defn draw-speech-balloon
+  "Draws a speech balloon over the specified coordinate"
+  [speech x y]
+  (let [balloon-width (+ (s/text-width speech) 40)
+        balloon-height (+ (s/text-ascent) (s/text-descent) 40)]
+    (d/draw-it :speech-balloon [x y] (fn []
+                                       (s/translate (- (/ balloon-width 2))
+                                                    (- (+ offset point-height balloon-height)))
+                                       
+                                       (d/shape [[0 0]
+                                                 [balloon-width 0]
+                                                 [balloon-width balloon-height]
+                                                 [(+ (/ balloon-width 2) point-width) balloon-height]
+                                                 [(/ balloon-width 2) (+ balloon-height point-height)]
+                                                 [(/ balloon-width 2) balloon-height]
+                                                 [0 balloon-height]])
+                                       
+                                       (d/set-style :words)
+                                       (s/text speech 20 (+ 20 (s/text-ascent)))))))
