@@ -14,7 +14,8 @@
     (d/draw-it :speech-balloon [x y] (fn []
                                        (s/translate (- (/ balloon-width 2))
                                                     (- (+ offset point-height balloon-height)))
-
+                                       
+                                       ; draw balloon
                                        (d/style {:fill [0 0 255]} (fn []
                                                 (d/shape [[0 0]
                                                           [balloon-width 0]
@@ -24,5 +25,6 @@
                                                           [(/ balloon-width 2) balloon-height]
                                                           [0 balloon-height]])))
                                        
+                                       ; draw text
                                        (d/style {:fill 255} (fn []
                                                 (s/text speech 20 (+ 20 (s/text-ascent)))))))))
