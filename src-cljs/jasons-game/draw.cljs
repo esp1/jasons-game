@@ -83,12 +83,3 @@
                                         (def images (assoc images id response)))})))  ; so just store the base64 image data in the map
 
 (defmulti draw-thing :type)
-
-(def cursor-size 10)
-(defn draw-cursor
-  "Draws a cursor at the specified coordinate"
-  [x y]
-  (draw-it :cursor [x y] (fn []
-                           (s/line (- cursor-size) 0, cursor-size 0)
-                           (s/line 0 (- cursor-size), 0 cursor-size)))
-  (set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))
