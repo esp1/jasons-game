@@ -8,11 +8,11 @@
 
 (defmethod d/draw-thing :person
   [person]
-  (d/draw-it (person :location)
-             {:stroke 0, :fill [0 255 0]}
-             (fn []
-               (s/ellipse 0 0 diameter diameter)  ; draw person
-               (draw-speech-balloon (str "My name is " (person :name)) 0 (- radius)))))  ; draw speech balloon
+  (d/translate (person :location)
+               {:stroke 0, :fill [0 255 0]}
+               (fn []
+                 (s/ellipse 0 0 diameter diameter)  ; draw person
+                 (draw-speech-balloon (str "My name is " (person :name)) 0 (- radius)))))  ; draw speech balloon
 
 ;    (s/push-matrix)
 ;    (s/scale 2.0)

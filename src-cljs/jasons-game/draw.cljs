@@ -46,9 +46,11 @@
 
 ;; Draw
 
-(defn draw-it
-  "Translate origin to location of thing, and draw using supplied function"
-  ([location f] (draw-it location {} f))
+(defn translate
+  "Translates the origin to the given location, and draws using the supplied function.
+  Optionally takes in a map of style attributes which will also be applied before drawing.
+  Restores the translation matrix and styles to their previous state afterwards."
+  ([location f] (translate location {} f))
   ([[x y] style-attrs f] (s/push-matrix)
                          (s/translate x y)
                          
