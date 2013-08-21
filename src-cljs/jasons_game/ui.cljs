@@ -123,7 +123,7 @@
 
 (defn init []
   (js/Processing.
-    (sel1 :#world)
+    (sel1 :#stage)
     (s/sketch-init {:setup (fn []
                              (s/size (.-innerWidth js/window) (.-innerHeight js/window))
                              (s/text-font (s/create-font "Arial" 32)))
