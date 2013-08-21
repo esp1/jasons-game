@@ -2,7 +2,6 @@
   (:require [clojure.string :refer [join lower-case split]]
             [clojure.walk :refer [postwalk postwalk-replace]]))
 
-
 ;; Parts of speech
 
 (def pronouns {:personal {"I" :speaker
@@ -84,4 +83,3 @@
   instances of objects in the world"
   [sentence env]
   (postwalk-replace env sentence))
-

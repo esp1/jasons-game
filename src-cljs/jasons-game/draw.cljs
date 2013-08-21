@@ -5,7 +5,6 @@
             [dommy.core :as dommy]
             [libre.sketch :as s]))
 
-
 ;; Styles
 
 (def styles {:cursor {:stroke 0}
