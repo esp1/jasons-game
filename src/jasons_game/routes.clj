@@ -1,10 +1,17 @@
 (ns jasons_game.routes
   (:use compojure.core)
-  (:require [compojure.handler :as handler]
+  (:require [clojure.java.io :refer [file reader]]
+            [compojure.handler :as handler]
             [compojure.route :as route]))
 
+(defn get-image [id]
+  (let [f (file "resources/public" (str id ".base64"))]
+    (when (.exists f)
+      (let [ext (last (clojure.string/split id #"\."))]
+        (str "data:image/" ext ";base64," (slurp f))))))
+
 (defroutes app-routes
-;  (GET "/" [] "This is Jason's game")
+  (GET "/image/:id" [id] (get-image id))
   (route/resources "/")
   (route/not-found "Not Found"))
 

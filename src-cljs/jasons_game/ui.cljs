@@ -1,6 +1,8 @@
 (ns jasons_game.ui
   (:require-macros [dommy.macros :refer [sel sel1]])
-  (:require [dommy.core :as dommy]
+  (:require [clojure.string :refer [split]]
+            [ajax.core :refer [GET]]
+            [dommy.core :as dommy]
             [jasons_game.world :as world]
             [libre.sketch :as s]))
 
@@ -111,20 +113,35 @@
           (s/ellipse 0 0 person-radius person-radius)
           (draw-speech-balloon "How are you" 0 (- (/ person-radius 2))))))
 
-(def sketchy {:setup (fn []
-                       (s/size (.-innerWidth js/window) (.-innerHeight js/window))
-                       (s/text-font (s/create-font "Arial" 32))
-                       (s/preload-image "logo-color-255x75.png"))
-              
-              :draw (fn []
-                      (let [mx (s/mouse-x), my (s/mouse-y)]
-                        (s/background 100)
-                        
-                        (draw-person mx my)
-                        (s/image (s/load-image "logo-color-255x75.png") 100 100)
-                        (draw-cursor mx my)
-                        
-                        (show-coords mx my)))})
+(def images {})
+
+(defn load-image [name]
+  (if-let [img (images name)]
+    img
+    (GET (str "/image/" name) {:handler (fn [response]
+                                          (let [loaded-image (s/load-image response)]
+                                            (def images (assoc images name loaded-image))))})))
 
 (defn init []
-  (js/Processing. (sel1 :#world) (s/sketch-init sketchy)))
+  (js/Processing.
+    (sel1 :#world)
+    (s/sketch-init {:setup (fn []
+                             (s/size (.-innerWidth js/window) (.-innerHeight js/window))
+                             (s/text-font (s/create-font "Arial" 32)))
+;                             (s/preload-image "logo-color-255x75.png"))
+                    
+                    :draw (fn []
+                            (let [mx (s/mouse-x), my (s/mouse-y)]
+                              (s/background 100)
+                              
+                              (draw-person mx my)
+                              
+                              (s/push-matrix)
+                              (s/scale 2.0)
+                              (if-let [img (load-image "logo-color-255x75.png")]
+                                (s/image img 100 100))
+                              (s/pop-matrix)
+                              
+                              (draw-cursor mx my)
+                              
+                              (show-coords mx my)))})))

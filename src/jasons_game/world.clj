@@ -1,5 +1,9 @@
 (ns jasons_game.world)
 
+;; World
+; The world is a map of object names to objects.
+(def world {})
+
 
 ;; Things
 
@@ -27,10 +31,8 @@
     (assoc-in world [name :location] location)))
 
 
-;; World
-; The world is a map of object names to objects.
-(def world {})
+;; Population
 
 (defn populate-world []
   (add-thing "Edwin" {:type :person
-                      :location [0 0 0]}))
+                      :location [0 0]}))
