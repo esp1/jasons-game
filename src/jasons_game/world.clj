@@ -9,9 +9,9 @@
 
 (defn add-thing
   "Add something to the world"
-  [name thing]
+  [thing]
   (def world
-    (assoc world name thing)))
+    (assoc world (thing :name) thing)))
 
 (defn remove-thing
   "Remove something from the world"
@@ -34,5 +34,6 @@
 ;; Population
 
 (defn populate-world []
-  (add-thing "Edwin" {:type :person
-                      :location [0 0]}))
+  (add-thing {:type :person
+              :name "Edwin"
+              :location [400 200]}))

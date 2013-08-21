@@ -1,16 +1,16 @@
 (ns jasons-game.ui
   (:require-macros [dommy.macros :refer [sel sel1]])
-  (:require [jasons-game.world :as world]
+  (:require [ajax.core :refer [GET]]
             [clojure.browser.repl :as repl]
             [clojure.string :refer [split]]
-            [ajax.core :refer [GET]]
             [dommy.core :as dommy]
+            [jasons-game.world :as world]
             [libre.sketch :as s]))
 
 ;; Styles
 
 (def styles {:cursor {:stroke 0}
-             :person {:stroke 0, :fill [0 255 0]}
+             "Edwin" {:stroke 0, :fill [0 255 0]}
              :speech-balloon {:fill [0 0 255]}
              :words {:fill 255}})
 
@@ -28,8 +28,8 @@
                              3 (array (color 0) (color 1) (color 2) 255))
              (number? color) (array color color color 255))))
 
-(defn stroke-for [name] (to-processing-color ((styles name) :stroke)))
-(defn fill-for [name] (to-processing-color ((styles name) :fill)))
+(defn stroke-for [name] (to-processing-color (some-> (styles name) :stroke)))
+(defn fill-for [name] (to-processing-color (some-> (styles name) :fill)))
 
 (defn set-style [name]
   (if-let [[r g b a] (stroke-for name)]
@@ -50,16 +50,16 @@
 
 ;; Draw
 
-(defn draw-thing
+(defn draw-it
   "Lookup and apply styles for named object, translate origin to given coordinate, and draw using supplied function"
-  [name x y f]
-  (s/push-style)
-  (set-style name)
-  (s/push-matrix)
-  (s/translate x y)
-  (f)  ; actually draw
-  (s/pop-matrix)
-  (s/pop-style))
+  ([thing f] (draw-it (thing :name) (thing :location) f))
+  ([name [x y] f] (s/push-style)
+                  (set-style name)
+                  (s/push-matrix)
+                  (s/translate x y)
+                  (f)  ; actually draw
+                  (s/pop-matrix)
+                  (s/pop-style)))
 
 (defn shape
   [vertices]
@@ -72,10 +72,9 @@
 (defn draw-cursor
   "Draws a cursor at the specified coordinate"
   [x y]
-  (draw-thing :cursor x y
-              (fn []
-                (s/line (- cursor-size) 0, cursor-size 0)
-                (s/line 0 (- cursor-size), 0 cursor-size))))
+  (draw-it :cursor [x y] (fn []
+                           (s/line (- cursor-size) 0, cursor-size 0)
+                           (s/line 0 (- cursor-size), 0 cursor-size))))
 
 (def speech-balloon-properties {:offset 10
                                 :point-width 20
@@ -86,30 +85,20 @@
   (let [p speech-balloon-properties
         balloon-width (+ (s/text-width speech) 40)
         balloon-height (+ (s/text-ascent) (s/text-descent) 40)]
-    (draw-thing :speech-balloon x y
-                (fn []
-                  (s/translate (- (/ balloon-width 2))
-                               (- (+ (p :offset) (p :point-height) balloon-height)))
-                  
-                  (shape [[0 0]
-                          [balloon-width 0]
-                          [balloon-width balloon-height]
-                          [(+ (/ balloon-width 2) (p :point-width)) balloon-height]
-                          [(/ balloon-width 2) (+ balloon-height (p :point-height))]
-                          [(/ balloon-width 2) balloon-height]
-                          [0 balloon-height]])
-                  
-                  (set-style :words)
-                  (s/text speech 20 (+ 20 (s/text-ascent)))))))
-
-(def person-radius 100)
-(defn draw-person
-  "Draws a person at the specified coordinate"
-  [x y]
-  (draw-thing :person x y
-              (fn []
-                (s/ellipse 0 0 person-radius person-radius)
-                (draw-speech-balloon "How are you" 0 (- (/ person-radius 2))))))
+    (draw-it :speech-balloon [x y] (fn []
+                                     (s/translate (- (/ balloon-width 2))
+                                                  (- (+ (p :offset) (p :point-height) balloon-height)))
+                                     
+                                     (shape [[0 0]
+                                             [balloon-width 0]
+                                             [balloon-width balloon-height]
+                                             [(+ (/ balloon-width 2) (p :point-width)) balloon-height]
+                                             [(/ balloon-width 2) (+ balloon-height (p :point-height))]
+                                             [(/ balloon-width 2) balloon-height]
+                                             [0 balloon-height]])
+                                     
+                                     (set-style :words)
+                                     (s/text speech 20 (+ 20 (s/text-ascent)))))))
 
 (def images {})
 
@@ -129,29 +118,43 @@
                                         ; can't call s/load-image here because we're not in the dynamic scope for the *processing* binding
                                         (def images (assoc images id response)))})))  ; so just store the base64 image data in the map
 
+
+(defmulti draw-thing
+  "Draws a thing. A thing is a map that minimally has a :type key"
+  :type)
+
+(def person-radius 100)
+(defmethod draw-thing :person
+  [person]
+  (draw-it person (fn []
+                    (s/ellipse 0 0 person-radius person-radius)
+                    (draw-speech-balloon (str "My name is " (person :name)) 0 (- (/ person-radius 2))))))
+
 ;; Sketch
 
 (defn setup []
   (s/size (.-innerWidth js/window) (.-innerHeight js/window))
-  (s/text-font (s/create-font "Arial" 32)))
-   
+  (s/text-font (s/create-font "Arial" 32))
+  (world/populate-world))
+
 (defn draw []
   (let [mx (s/mouse-x), my (s/mouse-y)]
     (s/background 100)
     
-    (draw-person mx my)
+    (doseq [thing (vals world/world)]
+      (draw-thing thing))
     
-    (s/push-matrix)
-    (s/scale 2.0)
-    (if-let [img (load-image "logo-color-255x75.png")]
-      (s/image img 100 100))
-    (s/pop-matrix)
+;    (s/push-matrix)
+;    (s/scale 2.0)
+;    (if-let [img (load-image "logo-color-255x75.png")]
+;      (s/image img 100 100))
+;    (s/pop-matrix)
     
     (draw-cursor mx my)
                   
     (show-coords mx my)))
 
 (defn init []
+  (repl/connect "http://localhost:9000/repl")
   (js/Processing. (sel1 :#stage) (s/sketch-init {:setup setup
-                                                 :draw draw}))
-  (repl/connect "http://localhost:9000/repl"))
+                                                 :draw draw})))
