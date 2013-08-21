@@ -3,6 +3,7 @@
   (:require [clojure.browser.repl :as repl]
             [jasons-game.draw :as d]
             [jasons-game.thing.person]
+            [jasons-game.speech-balloon :refer [say]]
             [jasons-game.world :as world]
             [libre.sketch :as s]))
 
@@ -35,7 +36,8 @@
     (s/background 100)
     
     (doseq [thing (vals world/world)]
-      (d/draw-thing thing))
+      (d/draw-thing thing)
+      (say thing (str "My name is " (thing :name))))
     
     (draw-cursor mx my)))
 
