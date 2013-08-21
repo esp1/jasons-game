@@ -6,7 +6,7 @@
             [ring.middleware.format-response :refer [wrap-clojure-response]]))
 
 (defn get-image [id]
-  (let [f (file "resources/public" (str id ".base64"))]
+  (let [f (file "resources/public/img" (str id ".base64"))]
     (when (.exists f)
       (slurp f))))
 
