@@ -41,12 +41,13 @@
 (def HALF_PI (/ PI 2))
 (def QUARTER_PI (/ PI 4))
 (def TWO_PI (* PI 2))
+(def TAU TWO_PI)
 
 (defn arc
   ([x y w h start stop]
      (. *processing* (arc x y w h start stop)))
   ([x y d]
-     (. *processing* (arc x y d d 0 TWO_PI))))
+     (. *processing* (arc x y d d 0 TAU))))
 
 (defn ellipse
   ([x y w h]
