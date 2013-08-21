@@ -360,14 +360,14 @@
 (defn text-width [data]
   (. *processing* (textWidth data)))
 
-(defn text-ascent [data]
-  (. *processing* (textAscent data)))
+(defn text-ascent []
+  (. *processing* (textAscent)))
 
-(defn text-descent [data]
-  (. *processing* (textDescent data)))
+(defn text-descent []
+  (. *processing* (textDescent)))
 
-(defn text-height [data]
-  (+ (text-ascent data) (text-descent data)))
+(defn text-height []
+  (+ (text-ascent) (text-descent)))
 
 (defn mouse-button []
   (.-mouseButton *processing*))
