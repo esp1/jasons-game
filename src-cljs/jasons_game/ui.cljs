@@ -58,9 +58,7 @@
   (set-style name)
   (s/push-matrix)
   (s/translate x y)
-  
-  (f)
-  
+  (f)  ; actually draw
   (s/pop-matrix)
   (s/pop-style))
 
