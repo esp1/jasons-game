@@ -7,11 +7,6 @@
 
 ;; Styles
 
-(def styles {:cursor {:stroke 0}
-             "Edwin" {:stroke 0, :fill [0 255 0]}
-             :speech-balloon {:fill [0 0 255]}
-             :words {:fill 255}})
-
 (defn to-processing-color
   "Converts a color spec to a processing color, which is represented by a native javascript color array.
   A color spec can have any of the following forms:
@@ -26,16 +21,22 @@
                              3 (array (color 0) (color 1) (color 2) 255))
              (number? color) (array color color color 255))))
 
-(defn stroke-for [name] (to-processing-color (some-> (styles name) :stroke)))
-(defn fill-for [name] (to-processing-color (some-> (styles name) :fill)))
+(defn stroke-for [attrs] (to-processing-color (attrs :stroke)))
+(defn fill-for [attrs] (to-processing-color (attrs :fill)))
 
-(defn set-style [name]
-  (if-let [[r g b a] (stroke-for name)]
+(defn set-style [attrs]
+  (if-let [[r g b a] (stroke-for attrs)]
     (s/stroke r g b a)
     (s/no-stroke))
-  (if-let [[r g b a] (fill-for name)]
+  (if-let [[r g b a] (fill-for attrs)]
     (s/fill r g b a)
     (s/no-fill)))
+
+(defn style [attrs f]
+  (s/push-style)
+  (set-style attrs)
+  (f)
+  (s/pop-style))
 
 
 ;; Text box
@@ -46,15 +47,12 @@
 ;; Draw
 
 (defn draw-it
-  "Lookup and apply styles for named object, translate origin to given coordinate, and draw using supplied function"
+  "Translate origin to location of thing, and draw using supplied function"
   ([thing f] (draw-it (thing :name) (thing :location) f))
-  ([name [x y] f] (s/push-style)
-                  (set-style name)
-                  (s/push-matrix)
+  ([name [x y] f] (s/push-matrix)
                   (s/translate x y)
                   (f)  ; actually draw
-                  (s/pop-matrix)
-                  (s/pop-style)))
+                  (s/pop-matrix)))
 
 (defn shape
   [vertices]

@@ -14,14 +14,15 @@
     (d/draw-it :speech-balloon [x y] (fn []
                                        (s/translate (- (/ balloon-width 2))
                                                     (- (+ offset point-height balloon-height)))
+
+                                       (d/style {:fill [0 0 255]} (fn []
+                                                (d/shape [[0 0]
+                                                          [balloon-width 0]
+                                                          [balloon-width balloon-height]
+                                                          [(+ (/ balloon-width 2) point-width) balloon-height]
+                                                          [(/ balloon-width 2) (+ balloon-height point-height)]
+                                                          [(/ balloon-width 2) balloon-height]
+                                                          [0 balloon-height]])))
                                        
-                                       (d/shape [[0 0]
-                                                 [balloon-width 0]
-                                                 [balloon-width balloon-height]
-                                                 [(+ (/ balloon-width 2) point-width) balloon-height]
-                                                 [(/ balloon-width 2) (+ balloon-height point-height)]
-                                                 [(/ balloon-width 2) balloon-height]
-                                                 [0 balloon-height]])
-                                       
-                                       (d/set-style :words)
-                                       (s/text speech 20 (+ 20 (s/text-ascent)))))))
+                                       (d/style {:fill 255} (fn []
+                                                (s/text speech 20 (+ 20 (s/text-ascent)))))))))

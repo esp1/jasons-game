@@ -9,7 +9,7 @@
 (defmethod d/draw-thing :person
   [person]
   (d/draw-it person (fn []
-                      (s/ellipse 0 0 diameter diameter)
+                      (d/style {:stroke 0, :fill [0 255 0]} (fn [] (s/ellipse 0 0 diameter diameter)))
                       (draw-speech-balloon (str "My name is " (person :name)) 0 (- radius)))))
 
 ;    (s/push-matrix)

@@ -9,12 +9,14 @@
 ;; Cursor
 
 (def cursor-size 10)
+
 (defn draw-cursor
   "Draws a cursor at the specified coordinate"
   [x y]
   (d/draw-it :cursor [x y] (fn []
-                             (s/line (- cursor-size) 0, cursor-size 0)
-                             (s/line 0 (- cursor-size), 0 cursor-size)))
+                             (d/style {:stroke 0} (fn []
+                                                    (s/line (- cursor-size) 0, cursor-size 0)
+                                                    (s/line 0 (- cursor-size), 0 cursor-size)))))
   (d/set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))
 
 ;; Sketch
