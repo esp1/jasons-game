@@ -4,6 +4,7 @@
             [ajax.core :refer [GET]]
             [dommy.core :as dommy]
             [jasons_game.world :as world]
+            [clojure.browser.repl :as repl]
             [libre.sketch :as s]))
 
 
@@ -144,4 +145,8 @@
                               
                               (draw-cursor mx my)
                               
-                              (show-coords mx my)))})))
+                              (show-coords mx my)))}))
+  
+  ; Use of "localhost" will only work for local development.
+  ; Change the port to match the :repl-listen-port.
+  (repl/connect "http://localhost:9000/repl"))

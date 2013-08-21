@@ -21,7 +21,6 @@
       (update-in req [:uri]
                  #(case %
                     "/" "/index.html"
-                    "/repl" "/repl.html"
                     %)))))
 
 (def app
