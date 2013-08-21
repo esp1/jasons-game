@@ -52,9 +52,7 @@
   ([[x y] style-attrs f] (s/push-matrix)
                          (s/translate x y)
                          
-                         (if (empty? style-attrs)
-                           (f)
-                           (style style-attrs f))
+                         (style style-attrs f)
                          
                          (s/pop-matrix)))
 

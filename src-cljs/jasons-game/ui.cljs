@@ -22,6 +22,7 @@
   ; display coordinates in text box
   (d/set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))
 
+
 ;; Sketch
 
 (defn setup []
