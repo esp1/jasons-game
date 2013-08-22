@@ -2,6 +2,7 @@
   (:require-macros [dommy.macros :refer [sel1]])
   (:require [clojure.browser.repl :as repl]
             [jasons-game.draw :as d]
+            [jasons-game.thing :as t]
             [jasons-game.thing.person]
             [jasons-game.speech-balloon :refer [say]]
             [jasons-game.world :as w]
@@ -38,7 +39,7 @@
     (s/background 100)
     
     (doseq [thing (w/get-contents world)]
-      (d/draw-thing thing)
+      (t/draw thing)
       (say thing (str "My name is " (thing :name))))
     
     (draw-cursor mx my)))

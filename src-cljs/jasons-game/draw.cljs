@@ -79,5 +79,3 @@
     (GET (str "/image/" id) {:handler (fn [response]
                                         ; can't call s/load-image here because we're not in the dynamic scope for the *processing* binding
                                         (def images (assoc images id response)))})))  ; so just store the base64 image data in the map
-
-(defmulti draw-thing :type)

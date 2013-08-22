@@ -14,6 +14,7 @@
   :profiles {:dev {:dependencies [[midje "1.6-beta1"]
                                   [ring-mock "0.1.5"]]}}
   :cljsbuild {:crossovers [jasons-game.core
+                           jasons-game.thing
                            jasons-game.world]
               :crossover-path "crossover-cljs"
               :builds [{:source-paths ["src-cljs"]

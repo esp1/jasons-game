@@ -1,11 +1,12 @@
 (ns jasons-game.thing.person
   (:require [jasons-game.draw :as d]
+            [jasons-game.thing :as t]
             [libre.sketch :as s]))
 
 (def radius 50)
 (def diameter (* radius 2))
 
-(defmethod d/draw-thing :person
+(defmethod t/draw :person
   [person]
   (d/translate (person :location)
                {:stroke 0, :fill [0 255 0]}
@@ -17,3 +18,4 @@
 ;    (if-let [img (load-image "logo-color-255x75.png")]
 ;      (s/image img 100 100))
 ;    (s/pop-matrix)
+
