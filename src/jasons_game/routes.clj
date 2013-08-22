@@ -1,22 +1,27 @@
 (ns jasons-game.routes
   (:use compojure.core)
-  (:require [clojure.java.io :refer [file reader]]
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :refer [file reader]]
             [compojure.handler :as handler]
             [compojure.route :as route]
             [ring.middleware.format-response :refer [wrap-clojure-response]]))
+
+(defn load-world []
+  (with-open [in (java.io.PushbackReader. (reader "server-resources/world.edn"))]
+    (let [edn-seq (repeatedly (partial edn/read {:eof :theend} in))]
+      (pr-str (take-while (partial not= :theend) edn-seq)))))
+  
 
 (defn get-image [id]
   (let [f (file "resources/public/img" (str id ".base64"))]
     (when (.exists f)
       (slurp f))))
 
+
+;; Routes
+
 (defroutes app-routes
-  (GET "/world" [] (pr-str '( {:type :person
-                               :name "Edwin"
-                               :location [400 200]}
-                              {:type :person
-                               :name "Christine"
-                               :location [700 300]} )))
+  (GET "/world" [] (load-world))
   (GET "/image/:id" [id] (get-image id))
   (route/resources "/")
   (route/not-found "Not Found"))
