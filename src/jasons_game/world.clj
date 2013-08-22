@@ -39,15 +39,3 @@
 (defn get-thing-at-location
   [world location]
   (first (filter #(t/contains-location (deref %) location) (get-contents world))))
-
-
-;; Population
-
-(defn populate-world [world]
-  (doto world
-	  (add-thing {:type :person
-	              :name "Edwin"
-	              :location [400 200]})
-	  (add-thing {:type :person
-	              :name "Christine"
-	              :location [700 300]})))

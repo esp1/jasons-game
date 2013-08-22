@@ -1,6 +1,7 @@
 (ns jasons-game.ui.pjs.main
   (:require-macros [dommy.macros :refer [sel1]])
-  (:require [clojure.browser.repl :as repl]
+  (:require [ajax.core :refer [GET]]
+            [clojure.browser.repl :as repl]
             [jasons-game.thing :as t]
             [jasons-game.ui.pjs.draw :as d]
             [jasons-game.world :as w]
@@ -27,6 +28,12 @@
 
 (def world (w/new-world))
 
+(defn populate-world []
+  (GET "/world" {:handler (fn [response]
+                            (doseq [thing response]
+                              (w/add-thing world thing)))
+                 :error-handler (fn [response] (js/alert response))}))
+
 (defn say [thing words]
   (w/add-thing world {:type :word-balloon
                       :name :word-balloon
@@ -41,7 +48,7 @@
 (defn setup []
   (s/size (.-innerWidth js/window) (.-innerHeight js/window))
   (s/text-font (s/create-font "Arial" 32))
-  (w/populate-world world))
+  (populate-world))
 
 (defn draw []
   (let [mx (s/mouse-x), my (s/mouse-y)]

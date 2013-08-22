@@ -11,6 +11,12 @@
       (slurp f))))
 
 (defroutes app-routes
+  (GET "/world" [] (pr-str '( {:type :person
+                               :name "Edwin"
+                               :location [400 200]}
+                              {:type :person
+                               :name "Christine"
+                               :location [700 300]} )))
   (GET "/image/:id" [id] (get-image id))
   (route/resources "/")
   (route/not-found "Not Found"))
