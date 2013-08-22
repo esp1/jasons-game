@@ -30,6 +30,6 @@
              (let [world (new-world {:name "foo" :location [1 2]})
                    thing (get-thing world "foo")]
                (move-thing thing [72 99])
-               (get-contents world))
+               (map deref (get-contents world)))
              => '({:name "foo"
                    :location [72 99]})))

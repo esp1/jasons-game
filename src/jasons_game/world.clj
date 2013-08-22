@@ -1,4 +1,5 @@
-(ns jasons-game.world)
+(ns jasons-game.world
+  (:require [jasons-game.thing :as t]))
 
 ;; Things
 
@@ -33,8 +34,11 @@
 
 (defn get-contents
   [world]
-  (for [[k v] @world]
-    (deref v)))
+  (vals @world))
+
+(defn get-thing-at-location
+  [world [x y]]
+  (first (filter #(t/contains-point (deref %) [x y]) (get-contents world))))
 
 
 ;; Population

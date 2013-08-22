@@ -48,17 +48,24 @@
     (s/background 100)
     
     (doseq [thing (w/get-contents world)]
-      (t/draw thing))
+      (t/draw @thing))
     
     (draw-cursor mx my)))
 
 (defn mouse-pressed []
-  (let [mx (s/mouse-x), my (s/mouse-y)]
-    (if-let [thing (first (filter #(t/contains-point % [mx my]) (w/get-contents world)))]
-      (say thing (str "My name is " (thing :name))))))
+  (when-let [thing @(w/get-thing-at-location world [(s/mouse-x) (s/mouse-y)])]
+    (say thing (str "My name is " (thing :name)))))
+
+(defn mouse-dragged[]
+  (let [mx (s/mouse-x)
+        my (s/mouse-y)]
+    (when-let [thing (w/get-thing-at-location world [mx my])]
+      (w/remove-thing world :word-balloon)
+      (w/move-thing thing [mx my]))))
 
 (defn init []
   (repl/connect "http://localhost:9000/repl")
   (js/Processing. (sel1 :#stage) (s/sketch-init {:setup setup
                                                  :draw draw
-                                                 :mouse-pressed mouse-pressed})))
+                                                 :mouse-pressed mouse-pressed
+                                                 :mouse-dragged mouse-dragged})))
