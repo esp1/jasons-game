@@ -37,8 +37,8 @@
   (vals @world))
 
 (defn get-thing-at-location
-  [world [x y]]
-  (first (filter #(t/contains-point (deref %) [x y]) (get-contents world))))
+  [world location]
+  (first (filter #(t/contains-location (deref %) location) (get-contents world))))
 
 
 ;; Population

@@ -53,8 +53,8 @@
     (draw-cursor mx my)))
 
 (defn mouse-pressed []
-  (when-let [thing @(w/get-thing-at-location world [(s/mouse-x) (s/mouse-y)])]
-    (say thing (str "My name is " (thing :name)))))
+  (when-let [thing (w/get-thing-at-location world [(s/mouse-x) (s/mouse-y)])]
+    (say @thing (str "My name is " (@thing :name)))))
 
 (defn mouse-dragged[]
   (let [mx (s/mouse-x)

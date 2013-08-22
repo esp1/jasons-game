@@ -10,7 +10,7 @@
     [(+ x x0) (+ y y0)
      width height]))
 
-(defn contains-point
+(defn contains-location
   [thing [x y]]
   (let [[x0 y0 width height] (bounds-in-parent thing)]
     (and (< x0 x (+ x0 width))

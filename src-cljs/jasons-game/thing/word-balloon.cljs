@@ -32,3 +32,7 @@
                    (d/style {:fill 50}
                             (fn []
                               (s/text words 20 (+ 20 (s/text-ascent)))))))))
+
+(defmethod t/bounds-in-local :word-balloon
+  [word-balloon]
+  [0 0 0 0])
