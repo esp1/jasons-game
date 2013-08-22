@@ -1,6 +1,6 @@
 (ns jasons-game.core
   (:require [clojure.string :refer [join lower-case split]]
-            [clojure.walk :refer [postwalk postwalk-replace]]))
+            [clojure.walk :refer [postwalk-replace]]))
 
 ;; Parts of speech
 

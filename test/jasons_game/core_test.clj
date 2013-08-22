@@ -1,6 +1,6 @@
 (ns jasons-game.core-test
-  (:require [midje.sweet :refer :all]
-            [jasons-game.core :refer :all]))
+  (:require [jasons-game.core :refer :all]
+            [midje.sweet :refer :all]))
 
 ;; Sentence text
 ;(def sentence-text "I am happy to meet you")
@@ -20,7 +20,7 @@
 ;; Tests
 
 (facts "about parsing text into sentence structures"
-       (fact "Personal pronouns are correctly identified"
+       (fact "personal pronouns are correctly identified"
              (parse-sentence-text "I love you")
              => '{:type :sentence
                   :elements ( {:type :word, :text "I", :target :speaker}
@@ -28,13 +28,13 @@
                               {:type :word, :text "you", :target :addressee})}))
 
 (facts "about extracting text from sentence structures"
-       (fact "Text can be retrieved from a sentence structure"
+       (fact "text can be retrieved from a sentence structure"
              (let [sentence (parse-sentence-text "I love you")]
                (text sentence))
              => "I love you"))
 
 (facts "about environment binding"
-       (fact "Target values should be replaced with values in the environment"
+       (fact "target values should be replaced with values in the environment"
              (let [sentence (parse-sentence-text "I love you")]
                (bind-to-env sentence env))
              => '{:type :sentence

@@ -4,7 +4,7 @@
             [jasons-game.draw :as d]
             [jasons-game.thing.person]
             [jasons-game.speech-balloon :refer [say]]
-            [jasons-game.world :as world]
+            [jasons-game.world :as w]
             [libre.sketch :as s]))
 
 ;; Cursor
@@ -26,16 +26,18 @@
 
 ;; Sketch
 
+(def world (w/new-world))
+
 (defn setup []
   (s/size (.-innerWidth js/window) (.-innerHeight js/window))
   (s/text-font (s/create-font "Arial" 32))
-  (world/populate-world))
+  (w/populate-world world))
 
 (defn draw []
   (let [mx (s/mouse-x), my (s/mouse-y)]
     (s/background 100)
     
-    (doseq [thing (vals world/world)]
+    (doseq [thing (w/get-contents world)]
       (d/draw-thing thing)
       (say thing (str "My name is " (thing :name))))
     
