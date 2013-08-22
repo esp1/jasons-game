@@ -21,7 +21,6 @@
     (-add-sketch-handler processing sketch :mouse-clicked "mouseClicked")
     (-add-sketch-handler processing sketch :mouse-dragged "mouseDragged")
     (-add-sketch-handler processing sketch :mouse-moved "mouseMoved")
-    (-add-sketch-handler processing sketch :mouse-moved "mouseMoved")
     (-add-sketch-handler processing sketch :mouse-out "mouseOut")
     (-add-sketch-handler processing sketch :mouse-over "mouseOver")
     (-add-sketch-handler processing sketch :mouse-pressed "mousePressed")
