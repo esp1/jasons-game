@@ -24,6 +24,12 @@
   ; display coordinates in text box
   (d/set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))
 
+(defn say [thing speech]
+  (w/add-thing world {:type :speech-balloon
+                      :name :speech-balloon
+                      :location (:location thing)
+                      :sentence speech}))
+
 
 ;; Sketch
 
@@ -46,8 +52,7 @@
 (defn mouse-pressed []
   (let [mx (s/mouse-x), my (s/mouse-y)]
     (if-let [thing (first (filter #(t/contains-point % [mx my]) (w/get-contents world)))]
-      (js/alert thing))))
-;      (say thing (str "My name is " (thing :name))))))
+      (say thing (str "My name is " (thing :name))))))
 
 (defn init []
   (repl/connect "http://localhost:9000/repl")
