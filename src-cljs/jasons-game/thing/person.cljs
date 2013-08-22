@@ -11,13 +11,13 @@
   (d/translate (:location person)
                {:stroke 0, :fill [0 255 0]}
                (fn []
-                 (s/ellipse 0 0 diameter diameter))))
-
-;    (s/push-matrix)
-;    (s/scale 2.0)
-;    (if-let [img (load-image "logo-color-255x75.png")]
-;      (s/image img 100 100))
-;    (s/pop-matrix)
+                 (s/ellipse 0 0 diameter diameter)
+                 
+                 (if-let [img (d/load-image "logo-color-255x75.png")]
+                   (d/translate
+                     [(- (/ (.-width img) 2)) (- (/ (.-height img) 2))]
+                     (fn []
+                       (s/image img 0 0)))))))
 
 (defmethod t/bounds-in-local :person
   [person]
