@@ -4,7 +4,6 @@
             [jasons-game.draw :as d]
             [jasons-game.thing :as t]
             [jasons-game.thing.person]
-            [jasons-game.speech-balloon :refer [say]]
             [jasons-game.world :as w]
             [libre.sketch :as s]))
 
@@ -24,16 +23,21 @@
   ; display coordinates in text box
   (d/set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))
 
+
+;; World
+
+(def world (w/new-world))
+
 (defn say [thing speech]
   (w/add-thing world {:type :speech-balloon
                       :name :speech-balloon
-                      :location (:location thing)
+                      :location (let [[x y] (:location thing)
+                                      [x0 y0 w h] (t/bounds-in-local thing)]
+                                  [x (+ y y0)])
                       :sentence speech}))
 
 
 ;; Sketch
-
-(def world (w/new-world))
 
 (defn setup []
   (s/size (.-innerWidth js/window) (.-innerHeight js/window))
