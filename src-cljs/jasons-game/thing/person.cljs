@@ -19,3 +19,7 @@
 ;      (s/image img 100 100))
 ;    (s/pop-matrix)
 
+(defmethod t/bounds-in-local :person
+  [person]
+  [(- radius) (- radius)
+   diameter diameter])

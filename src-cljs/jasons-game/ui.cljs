@@ -39,12 +39,18 @@
     (s/background 100)
     
     (doseq [thing (w/get-contents world)]
-      (t/draw thing)
-      (say thing (str "My name is " (thing :name))))
+      (t/draw thing))
     
     (draw-cursor mx my)))
+
+(defn mouse-pressed []
+  (let [mx (s/mouse-x), my (s/mouse-y)]
+    (if-let [thing (first (filter #(t/contains-point % [mx my]) (w/get-contents world)))]
+      (js/alert thing))))
+;      (say thing (str "My name is " (thing :name))))))
 
 (defn init []
   (repl/connect "http://localhost:9000/repl")
   (js/Processing. (sel1 :#stage) (s/sketch-init {:setup setup
-                                                 :draw draw})))
+                                                 :draw draw
+                                                 :mouse-pressed mouse-pressed})))
