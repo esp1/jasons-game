@@ -3,7 +3,6 @@
   (:require [clojure.browser.repl :as repl]
             [jasons-game.draw :as d]
             [jasons-game.thing :as t]
-            [jasons-game.thing.person]
             [jasons-game.world :as w]
             [libre.sketch :as s]))
 
@@ -28,13 +27,13 @@
 
 (def world (w/new-world))
 
-(defn say [thing speech]
-  (w/add-thing world {:type :speech-balloon
-                      :name :speech-balloon
+(defn say [thing words]
+  (w/add-thing world {:type :word-balloon
+                      :name :word-balloon
                       :location (let [[x y] (:location thing)
                                       [x0 y0 w h] (t/bounds-in-local thing)]
-                                  [x (+ y y0)])
-                      :sentence speech}))
+                                  [x (+ y y0)])  ; posiiton word balloon over top center of thing
+                      :words words}))
 
 
 ;; Sketch
