@@ -14,13 +14,14 @@
 	             @(new-world) => map?)
 	       
 	       (fact "adding a thing makes it appear in the world"
-	              (let [world (new-world)
-	                    thing {:name "me"}]
-	                (add-thing world thing)
-	                
-	                (count @world) => 1
-	                (keys @world) => '("me")
-	                @(@world "me") => {:name "me"}))
+              (let [world (new-world)
+                    thing {:name "me"}
+                    athing (add-thing world thing)]
+                (atom? athing)
+                
+                (count @world) => 1
+                (keys @world) => '("me")
+                @(@world "me") => {:name "me"}))
 	       
 	       (fact "removing a thing removes it from the world"
 	             (let [world (new-world {:name "bleah"})]

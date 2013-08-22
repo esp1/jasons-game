@@ -22,6 +22,11 @@
   [thing location]
   (swap! thing assoc :location location))
 
+(defn modify-thing
+  "Changes an attribute of a thing"
+  [thing attr value]
+  (swap! thing assoc attr value))
+
 
 ;; World
 ; The world is an ordered map of objects.

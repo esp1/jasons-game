@@ -1,7 +1,10 @@
 (ns jasons-game.ui.pjs.main
-  (:require-macros [dommy.macros :refer [sel1]])
+  (:require-macros [dommy.macros :refer [sel1]]
+                   [cljs.core.async.macros :as m :refer [go]])
   (:require [ajax.core :refer [GET]]
+            [cljs.core.async :as async :refer [<! go timeout]]
             [clojure.browser.repl :as repl]
+            [dommy.core :refer [listen!]]
             [jasons-game.thing :as t]
             [jasons-game.ui.pjs.draw :as d]
             [jasons-game.world :as w]
@@ -34,13 +37,21 @@
                               (w/add-thing world thing)))
                  :error-handler (fn [response] (js/alert response))}))
 
+(defn char-at-a-time [words]
+  (reverse (map (comp clojure.string/join reverse) (take-while #(< 0 (count %)) (iterate rest (seq (reverse words)))))))
+
 (defn say [thing words]
   (w/add-thing world {:type :word-balloon
-                      :name :word-balloon
-                      :location (let [[x y] (:location thing)
-                                      [x0 y0 w h] (t/bounds-in-local thing)]
-                                  [x (+ y y0)])  ; posiiton word balloon over top center of thing
-                      :words words}))
+                                  :name :word-balloon
+                                  :location (let [[x y] (:location thing)
+                                                  [x0 y0 w h] (t/bounds-in-local thing)]
+                                              [x (+ y y0)])  ; posiiton word balloon over top center of thing
+                                  :words ""})
+  (let [athing (w/get-thing world :word-balloon)]
+    (go
+      (doseq [w (char-at-a-time words)]
+        (w/modify-thing athing :words w)
+        (<! (timeout 500))))))
 
 
 ;; Sketch
@@ -63,7 +74,7 @@
   (when-let [thing (w/get-thing-at-location world [(s/mouse-x) (s/mouse-y)])]
     (say @thing (str "My name is " (:name @thing)))))
 
-(defn mouse-dragged[]
+(defn mouse-dragged []
   (let [mx (s/mouse-x)
         my (s/mouse-y)]
     (when-let [thing (w/get-thing-at-location world [mx my])]
@@ -72,6 +83,7 @@
 
 (defn init []
   (repl/connect "http://localhost:9000/repl")
+  
   (js/Processing. (sel1 :#stage) (s/sketch-init {:setup setup
                                                  :draw draw
                                                  :mouse-pressed mouse-pressed
