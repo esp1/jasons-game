@@ -8,7 +8,7 @@
 
 (defmethod t/draw :person
   [person]
-  (d/translate (person :location)
+  (d/translate (:location person)
                {:stroke 0, :fill [0 255 0]}
                (fn []
                  (s/ellipse 0 0 diameter diameter))))

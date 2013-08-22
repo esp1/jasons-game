@@ -9,7 +9,7 @@
 
 (defmethod t/draw :word-balloon
   [word-balloon]
-  (d/translate (word-balloon :location)
+  (d/translate (:location word-balloon)
                (let [words (:words word-balloon)
                      balloon-width (+ (s/text-width words) 40)
                      balloon-height (+ (s/text-ascent) (s/text-descent) 40)]

@@ -54,7 +54,7 @@
 
 (defn mouse-pressed []
   (when-let [thing (w/get-thing-at-location world [(s/mouse-x) (s/mouse-y)])]
-    (say @thing (str "My name is " (@thing :name)))))
+    (say @thing (str "My name is " (:name @thing)))))
 
 (defn mouse-dragged[]
   (let [mx (s/mouse-x)

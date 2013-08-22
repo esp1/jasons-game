@@ -22,10 +22,10 @@
              (number? color) (array color color color 255))))
 
 (defn set-style [attrs]
-  (if-let [[r g b a] (to-processing-color (attrs :stroke))]
+  (if-let [[r g b a] (to-processing-color (:stroke attrs))]
     (s/stroke r g b a)
     (s/no-stroke))
-  (if-let [[r g b a] (to-processing-color (attrs :fill))]
+  (if-let [[r g b a] (to-processing-color (:fill attrs))]
     (s/fill r g b a)
     (s/no-fill)))
 

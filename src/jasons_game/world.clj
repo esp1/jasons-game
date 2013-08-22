@@ -10,7 +10,7 @@
 (defn add-thing
   "Adds a thing to the world. The thing will be wrapped in an atom."
   [world thing]
-  (swap! world assoc (thing :name) (atom thing)))
+  (swap! world assoc (:name thing) (atom thing)))
 
 (defn remove-thing
   "Removes a thing from the world"
