@@ -1,6 +1,6 @@
-(ns jasons-game.thing.person
-  (:require [jasons-game.draw :as d]
-            [jasons-game.thing :as t]
+(ns jasons-game.ui.pjs.thing.person
+  (:require [jasons-game.thing :as t]
+            [jasons-game.ui.pjs.draw :as d]
             [libre.sketch :as s]))
 
 (def radius 50)

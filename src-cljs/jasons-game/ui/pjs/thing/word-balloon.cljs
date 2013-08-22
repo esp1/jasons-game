@@ -1,6 +1,6 @@
-(ns jasons-game.word-balloon
-  (:require [jasons-game.draw :as d]
-            [jasons-game.thing :as t]
+(ns jasons-game.ui.pjs.word-balloon
+  (:require [jasons-game.thing :as t]
+            [jasons-game.ui.pjs.draw :as d]
             [libre.sketch :as s]))
 
 (def offset 10)

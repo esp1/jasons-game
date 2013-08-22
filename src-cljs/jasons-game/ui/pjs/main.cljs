@@ -1,8 +1,8 @@
-(ns jasons-game.ui
+(ns jasons-game.ui.pjs.main
   (:require-macros [dommy.macros :refer [sel1]])
   (:require [clojure.browser.repl :as repl]
-            [jasons-game.draw :as d]
             [jasons-game.thing :as t]
+            [jasons-game.ui.pjs.draw :as d]
             [jasons-game.world :as w]
             [libre.sketch :as s]))
 

@@ -1,4 +1,4 @@
-(ns jasons-game.draw
+(ns jasons-game.ui.pjs.draw
   (:require-macros [dommy.macros :refer [sel1]])
   (:require [ajax.core :refer [GET]]
             [clojure.string :refer [split]]
