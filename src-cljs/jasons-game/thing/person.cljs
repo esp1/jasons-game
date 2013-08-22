@@ -13,7 +13,7 @@
                (fn []
                  (s/ellipse 0 0 diameter diameter)
                  
-                 (if-let [img (d/load-image "logo-color-255x75.png")]
+                 (if-let [img (d/load-image (:name person))]
                    (d/translate
                      [(- (/ (.-width img) 2)) (- (/ (.-height img) 2))]
                      (fn []
