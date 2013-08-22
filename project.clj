@@ -9,7 +9,8 @@
                  [compojure "1.1.5"]
                  [cljs-ajax "0.1.6"]]
   :plugins [[lein-cljsbuild "0.3.2"]
-            [lein-ring "0.8.5"]]
+            [lein-ring "0.8.5"]
+            [lein-cloverage "1.0.2"]]
   :ring {:handler jasons-game.routes/app}
   :profiles {:dev {:dependencies [[midje "1.6-beta1"]
                                   [ring-mock "0.1.5"]]}}

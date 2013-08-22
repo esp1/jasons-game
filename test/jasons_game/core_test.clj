@@ -1,5 +1,6 @@
 (ns jasons-game.core-test
-  (:require [jasons-game.core :refer :all]
+  (:require [clojure.test :refer [deftest]]
+            [jasons-game.core :refer :all]
             [midje.sweet :refer :all]))
 
 ;; Sentence text
@@ -19,25 +20,26 @@
 
 ;; Tests
 
-(facts "about parsing text into sentence structures"
-       (fact "personal pronouns are correctly identified"
-             (parse-sentence-text "I love you")
-             => '{:type :sentence
-                  :elements ( {:type :word, :text "I", :target :speaker}
-                              {:type :word, :text "love"}
-                              {:type :word, :text "you", :target :addressee})}))
-
-(facts "about extracting text from sentence structures"
-       (fact "text can be retrieved from a sentence structure"
-             (let [sentence (parse-sentence-text "I love you")]
-               (text sentence))
-             => "I love you"))
-
-(facts "about environment binding"
-       (fact "target values should be replaced with values in the environment"
-             (let [sentence (parse-sentence-text "I love you")]
-               (bind-to-env sentence env))
-             => '{:type :sentence
-                  :elements ( {:type :word, :text "I", :target {:name "Jason"}}
-                              {:type :word, :text "love"}
-                              {:type :word, :text "you", :target {:name "Daddy"}})}))
+(deftest core
+  (facts "about parsing text into sentence structures"
+         (fact "personal pronouns are correctly identified"
+               (parse-sentence-text "I love you")
+               => '{:type :sentence
+                    :elements ( {:type :word, :text "I", :target :speaker}
+                                {:type :word, :text "love"}
+                                {:type :word, :text "you", :target :addressee})}))
+	
+	(facts "about extracting text from sentence structures"
+	       (fact "text can be retrieved from a sentence structure"
+	             (let [sentence (parse-sentence-text "I love you")]
+	               (text sentence))
+	             => "I love you"))
+	
+	(facts "about environment binding"
+	       (fact "target values should be replaced with values in the environment"
+	             (let [sentence (parse-sentence-text "I love you")]
+	               (bind-to-env sentence env))
+	             => '{:type :sentence
+	                  :elements ( {:type :word, :text "I", :target {:name "Jason"}}
+	                              {:type :word, :text "love"}
+	                              {:type :word, :text "you", :target {:name "Daddy"}})})))
