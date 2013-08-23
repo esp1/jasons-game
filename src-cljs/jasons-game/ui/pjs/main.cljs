@@ -4,6 +4,7 @@
   (:require [ajax.core :refer [GET]]
             [cljs.core.async :as async :refer [<! go timeout]]
             [clojure.browser.repl :as repl]
+            [clojure.string :refer [split]]
             [dommy.core :refer [listen!]]
             [jasons-game.thing :as t]
             [jasons-game.ui.pjs.draw :as d]
@@ -37,8 +38,8 @@
                               (w/add-thing world thing)))
                  :error-handler (fn [response] (js/alert response))}))
 
-(defn char-at-a-time [words]
-  (reverse (map (comp clojure.string/join reverse) (take-while #(< 0 (count %)) (iterate rest (seq (reverse words)))))))
+(defn word-at-a-time [words]
+  (reverse (map (comp #(clojure.string/join " " %) reverse) (take-while #(< 0 (count %)) (iterate rest (reverse (split words #"\W")))))))
 
 (defn say [thing words]
   (w/add-thing world {:type :word-balloon
@@ -49,7 +50,7 @@
                                   :words ""})
   (let [athing (w/get-thing world :word-balloon)]
     (go
-      (doseq [w (char-at-a-time words)]
+      (doseq [w (word-at-a-time words)]
         (w/modify-thing athing :words w)
         (<! (timeout 500))))))
 
@@ -70,7 +71,7 @@
     
     (draw-cursor mx my)))
 
-(defn mouse-pressed []
+(defn mouse-released []
   (when-let [thing (w/get-thing-at-location world [(s/mouse-x) (s/mouse-y)])]
     (say @thing (str "My name is " (:name @thing)))))
 
@@ -78,7 +79,6 @@
   (let [mx (s/mouse-x)
         my (s/mouse-y)]
     (when-let [thing (w/get-thing-at-location world [mx my])]
-      (w/remove-thing world :word-balloon)
       (w/move-thing thing [mx my]))))
 
 (defn init []
@@ -86,5 +86,5 @@
   
   (js/Processing. (sel1 :#stage) (s/sketch-init {:setup setup
                                                  :draw draw
-                                                 :mouse-pressed mouse-pressed
+                                                 :mouse-released mouse-released
                                                  :mouse-dragged mouse-dragged})))
