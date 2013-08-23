@@ -12,8 +12,8 @@
       (pr-str (take-while (partial not= :theend) edn-seq)))))
   
 
-(defn get-image [id]
-  (let [f (file "server-resources/img" (str id ".base64"))]
+(defn get-resource [kind type encoding id]
+  (let [f (file (str "server-resources/" kind) (str id "." type "." encoding))]
     (when (.exists f)
       (slurp f))))
 
@@ -22,7 +22,7 @@
 
 (defroutes app-routes
   (GET "/world" [] (load-world))
-  (GET "/image/:id" [id] (get-image id))
+  (GET "/:kind/:type/:encoding/:id" [kind type encoding id] (get-resource kind type encoding id))
   (route/resources "/")
   (route/not-found "Not Found"))
 

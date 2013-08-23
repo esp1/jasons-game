@@ -65,17 +65,16 @@
 (def image-cache (atom {}))
 
 (defn load-image [id]
-  (if-let [img (@image-cache id)]
+  (if-let [val (@image-cache id)]
     (cond
-      (identical? :not-found img) nil
-      (symbol? img) (let [url (str "data:image/png;base64," img)
-                          loaded-image (s/load-image url)]  ; s/load-image on the base64 image data
+      (identical? :not-found val) nil
+      (symbol? val) (let [loaded-image (s/load-image (str "data:image/png;base64," val))]  ; s/load-image on the base64 image data
                       (swap! image-cache assoc id loaded-image)) ; return the cached image
-      :else img)
+      :else val)
     
     ; not loaded yet, go get it via alax call
-    (GET (str "/image/" id ".png") {:handler (fn [response]
-                                               ; can't call s/load-image here because we're not in the dynamic scope for the *processing* binding
-                                               (swap! image-cache assoc id response))
-                                    :error-handler (fn [response]
-                                                     (swap! image-cache assoc id :not-found))})))  ; so just store the base64 image data in the map
+    (GET (str "/image/png/base64/" id) {:handler (fn [response]
+                                                  ; can't call s/load-image here because we're not in the dynamic scope for the *processing* binding
+                                                  (swap! image-cache assoc id response))
+                                       :error-handler (fn [response]
+                                                        (swap! image-cache assoc id :not-found))})))  ; so just store the base64 image data in the map
