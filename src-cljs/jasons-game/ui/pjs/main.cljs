@@ -5,7 +5,7 @@
             [cljs.core.async :as async :refer [<! go timeout]]
             [clojure.browser.repl :as repl]
             [clojure.string :refer [split]]
-            [dommy.core :refer [listen!]]
+            [dommy.core :as dommy :refer [listen!]]
             [jasons-game.thing :as t]
             [jasons-game.ui.pjs.draw :as d]
             [jasons-game.world :as w]
@@ -73,7 +73,11 @@
 
 (defn mouse-released []
   (when-let [thing (w/get-thing-at-location world [(s/mouse-x) (s/mouse-y)])]
-    (say @thing (str "My name is " (:name @thing)))))
+    (say @thing (str "My name is " (:name @thing))))
+  (GET "/audio/ogg/base64/sound_test" {:handler (fn [response]
+                                                  (dommy/append! (sel1 :body) [:audio {:autoplay true}
+                                                                               [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]]))
+                                       :error-handler (fn [response] (js/alert response))}))
 
 (defn mouse-dragged []
   (let [mx (s/mouse-x)
