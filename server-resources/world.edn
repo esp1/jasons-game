@@ -1,6 +1,7 @@
 {:type :person
  :name "Edwin"
- :location [400 200]}
+ :location [500 500]}
+
 {:type :person
  :name "Christine"
- :location [700 300]}
+ :location [1000 200]}

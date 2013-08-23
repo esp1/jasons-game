@@ -10,7 +10,10 @@
   (with-open [in (java.io.PushbackReader. (reader "server-resources/world.edn"))]
     (let [edn-seq (repeatedly (partial edn/read {:eof :theend} in))]
       (pr-str (take-while (partial not= :theend) edn-seq)))))
-  
+
+(defn save-world [world]
+  (spit "server-resources/world-save.edn" world)
+  "Saved")
 
 (defn get-resource
   [kind type encoding id]
@@ -26,6 +29,7 @@
 
 (defroutes app-routes
   (GET "/world" [] (load-world))
+  (POST "/save-world" [world] (save-world world))
   (GET "/:kind/:type/:id" [kind type encoding id] (get-resource kind type nil id))
   (GET "/:kind/:type/:encoding/:id" [kind type encoding id] (get-resource kind type encoding id))
   (route/resources "/")
