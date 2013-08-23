@@ -6,14 +6,17 @@
             [compojure.route :as route]
             [ring.middleware.format-response :refer [wrap-clojure-response]]))
 
+(defn something-to-say []
+  (pr-str (edn/read-string (slurp "server-resources/things-to-say.edn"))))
+
 (defn load-world []
   (with-open [in (java.io.PushbackReader. (reader "server-resources/world.edn"))]
     (let [edn-seq (repeatedly (partial edn/read {:eof :theend} in))]
       (pr-str (take-while (partial not= :theend) edn-seq)))))
 
 (defn save-world [world]
-  (spit "server-resources/world-save.edn" world)
-  "Saved")
+  (spit "server-resources/world.edn" world)
+  "Congratulations")
 
 (defn get-resource
   [kind type encoding id]
@@ -28,6 +31,7 @@
 ;; Routes
 
 (defroutes app-routes
+  (GET "/something-to-say" [] (something-to-say))
   (GET "/world" [] (load-world))
   (POST "/save-world" [world] (save-world world))
   (GET "/:kind/:type/:id" [kind type encoding id] (get-resource kind type nil id))

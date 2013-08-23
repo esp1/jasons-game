@@ -1,0 +1,5 @@
+{:sentence "Hello there :addressee, my name is :speaker"
+ :audio "hello_there"}
+
+{:sentence "Hey :addressee"
+ :audio "hello_there"}

@@ -1,10 +1,10 @@
 (ns jasons-game.ui.pjs.main
   (:require-macros [dommy.macros :refer [sel1]]
                    [cljs.core.async.macros :as m :refer [go]])
-  (:require [ajax.core :refer [GET]]
+  (:require [ajax.core :refer [GET POST]]
             [cljs.core.async :as async :refer [<! go timeout]]
             [clojure.browser.repl :as repl]
-            [clojure.string :refer [split]]
+            [clojure.string :refer [replace split]]
             [dommy.core :as dommy :refer [listen!]]
             [jasons-game.thing :as t]
             [jasons-game.ui.pjs.draw :as d]
@@ -31,6 +31,7 @@
 ;; World
 
 (def world (w/new-world))
+(def me {:name "Jason"})
 
 (defn populate-world []
   (GET "/world" {:handler (fn [response]
@@ -41,19 +42,49 @@
 (defn word-at-a-time [words]
   (reverse (map (comp #(clojure.string/join " " %) reverse) (take-while #(< 0 (count %)) (iterate rest (reverse (split words #"\s")))))))
 
-(defn say [thing words]
-  (w/add-thing world {:type :word-balloon
-                                  :name :word-balloon
-                                  :location (let [[x y] (:location thing)
-                                                  [x0 y0 w h] (t/bounds-in-local thing)]
-                                              [x (+ y y0)])  ; posiiton word balloon over top center of thing
-                                  :words ""})
-  (let [athing (w/get-thing world :word-balloon)]
-    (go
-      (doseq [w (word-at-a-time words)]
-        (w/modify-thing athing :words w)
-        (<! (timeout 500))))))
+(defn error-hander [response]
+  (js/alert response))
 
+(defn play-audio [audio]
+  (GET (str "/audio/ogg/base64/" audio) {:handler (fn [response]
+                                                    (dommy/replace! (sel1 :#audio)
+                                                                    [:audio {:id "audio", :autoplay true}
+                                                                     [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]]))
+                                         :error-handler error-hander}))
+
+(defn bind-to-env [sentence env]
+  (reduce
+    (fn [s [key val]] (clojure.string/replace s (str ":" (name key)) (:name val)))
+    sentence
+    env))
+
+(defn say-something [env sts]
+  (let [words (bind-to-env (:sentence sts) env)
+        audio (:audio sts)]
+    ; add word balloon to the world
+    (w/add-thing world {:type :word-balloon
+                        :name :word-balloon
+                        :location (let [speaker (:speaker env)
+                                        [x y] (:location speaker)
+                                        [x0 y0 w h] (t/bounds-in-local speaker)]
+                                    [x (+ y y0)])  ; posiiton word balloon over top center of thing
+                        :words ""})
+    
+    ; animate word balloon text
+    (let [athing (w/get-thing world :word-balloon)]
+      (go
+        (doseq [w (word-at-a-time words)]
+          (w/modify-thing athing :words w)
+          (<! (timeout 500)))))
+    
+    ; play audio
+    (play-audio audio)))
+
+(defn say [env]
+  (js/alert env)
+  (GET "/something-to-say" {:handler #(say-something env %)
+                            :error-handler error-hander}))
+  
 
 ;; Sketch
 
@@ -73,11 +104,8 @@
 
 (defn mouse-released []
   (when-let [thing (w/get-thing-at-location world [(s/mouse-x) (s/mouse-y)])]
-    (say @thing (str "Hi Jason! My name is " (:name @thing) ".")))
-  (GET "/audio/ogg/base64/sound_test" {:handler (fn [response]
-                                                  (dommy/replace! (sel1 :#audio) [:audio {:id "audio", :autoplay true}
-                                                                               [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]]))
-                                       :error-handler (fn [response] (js/alert response))}))
+    (say {:speaker @thing
+          :addressee me})))
 
 (defn mouse-dragged []
   (let [mx (s/mouse-x)
@@ -85,10 +113,18 @@
     (when-let [thing (w/get-thing-at-location world [mx my])]
       (w/move-thing thing [mx my]))))
 
+(defn key-pressed []
+  (let [key (.toString (s/get-key))] 
+    (when (= key "s")
+      (POST "/save-world" {:params {:world (apply pr-str (map deref (vals @world)))}
+                           :handler (fn [response] (js/alert response))
+                           :error-handler (fn [response] (js/alert (pr-str "Save error:" response)))}))))
+
 (defn init []
   (repl/connect "http://localhost:9000/repl")
   
   (js/Processing. (sel1 :#stage) (s/sketch-init {:setup setup
                                                  :draw draw
                                                  :mouse-released mouse-released
-                                                 :mouse-dragged mouse-dragged})))
+                                                 :mouse-dragged mouse-dragged
+                                                 :key-pressed key-pressed})))
