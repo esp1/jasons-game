@@ -39,7 +39,7 @@
                  :error-handler (fn [response] (js/alert response))}))
 
 (defn word-at-a-time [words]
-  (reverse (map (comp #(clojure.string/join " " %) reverse) (take-while #(< 0 (count %)) (iterate rest (reverse (split words #"\W")))))))
+  (reverse (map (comp #(clojure.string/join " " %) reverse) (take-while #(< 0 (count %)) (iterate rest (reverse (split words #"\s")))))))
 
 (defn say [thing words]
   (w/add-thing world {:type :word-balloon
@@ -73,7 +73,7 @@
 
 (defn mouse-released []
   (when-let [thing (w/get-thing-at-location world [(s/mouse-x) (s/mouse-y)])]
-    (say @thing (str "My name is " (:name @thing))))
+    (say @thing (str "Hi Jason! My name is " (:name @thing) ".")))
   (GET "/audio/ogg/base64/sound_test" {:handler (fn [response]
                                                   (dommy/append! (sel1 :body) [:audio {:autoplay true}
                                                                                [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]]))
