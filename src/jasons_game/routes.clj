@@ -12,8 +12,12 @@
       (pr-str (take-while (partial not= :theend) edn-seq)))))
   
 
-(defn get-resource [kind type encoding id]
-  (let [f (file (str "server-resources/" kind) (str id "." type "." encoding))]
+(defn get-resource
+  [kind type encoding id]
+  (let [r (str id "." type)
+        f (file (str "server-resources/" kind) (if encoding
+                                                 (str r "." encoding)
+                                                 r))]
     (when (.exists f)
       (slurp f))))
 
@@ -22,6 +26,7 @@
 
 (defroutes app-routes
   (GET "/world" [] (load-world))
+  (GET "/:kind/:type/:id" [kind type encoding id] (get-resource kind type nil id))
   (GET "/:kind/:type/:encoding/:id" [kind type encoding id] (get-resource kind type encoding id))
   (route/resources "/")
   (route/not-found "Not Found"))
