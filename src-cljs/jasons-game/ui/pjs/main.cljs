@@ -27,6 +27,9 @@
   ; display coordinates in text box
   (d/set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))
 
+(defn alert-handler [response]
+  (js/alert response))
+
 
 ;; World
 
@@ -37,20 +40,17 @@
   (GET "/world" {:handler (fn [response]
                             (doseq [thing response]
                               (w/add-thing world thing)))
-                 :error-handler (fn [response] (js/alert response))}))
+                 :error-handler alert-handler}))
 
 (defn word-at-a-time [words]
   (reverse (map (comp #(clojure.string/join " " %) reverse) (take-while #(< 0 (count %)) (iterate rest (reverse (split words #"\s")))))))
-
-(defn error-hander [response]
-  (js/alert response))
 
 (defn play-audio [audio]
   (GET (str "/audio/ogg/base64/" audio) {:handler (fn [response]
                                                     (dommy/replace! (sel1 :#audio)
                                                                     [:audio {:id "audio", :autoplay true}
                                                                      [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]]))
-                                         :error-handler error-hander}))
+                                         :error-handler alert-handler}))
 
 (defn bind-to-env [sentence env]
   (reduce
@@ -81,9 +81,8 @@
     (play-audio audio)))
 
 (defn say [env]
-  (js/alert env)
   (GET "/something-to-say" {:handler #(say-something env %)
-                            :error-handler error-hander}))
+                            :error-handler alert-handler}))
   
 
 ;; Sketch
@@ -117,8 +116,8 @@
   (let [key (.toString (s/get-key))] 
     (when (= key "s")
       (POST "/save-world" {:params {:world (apply pr-str (map deref (vals @world)))}
-                           :handler (fn [response] (js/alert response))
-                           :error-handler (fn [response] (js/alert (pr-str "Save error:" response)))}))))
+                           :handler alert-handler
+                           :error-handler #(js/alert (pr-str "Save error:" %))}))))
 
 (defn init []
   (repl/connect "http://localhost:9000/repl")
