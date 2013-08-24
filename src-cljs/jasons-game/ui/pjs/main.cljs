@@ -88,13 +88,13 @@
 ;; Sketch
 
 (defn setup []
-  (s/size (.-innerWidth js/window) (.-innerHeight js/window))
+  (s/size 1000 600)
   (s/text-font (s/create-font "Arial" 32))
   (populate-world))
 
 (defn draw []
   (let [mx (s/mouse-x), my (s/mouse-y)]
-    (s/background 100)
+    (s/background 100 200 255)
     
     (doseq [thing (w/get-contents world)]
       (t/draw @thing))
