@@ -16,7 +16,7 @@
 
 (defn save-world [world]
   (spit "server-resources/world.edn" world)
-  "Congratulations")
+  "Saved")
 
 (defn get-resource
   [kind type encoding id]
