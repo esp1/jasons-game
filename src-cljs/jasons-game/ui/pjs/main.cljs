@@ -52,14 +52,14 @@
                                                                      [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]]))
                                          :error-handler alert-handler}))
 
-(defn bind-to-env [sentence env]
+(defn resolve-aliases [sentence env]
   (reduce
     (fn [s [key val]] (clojure.string/replace s (str ":" (name key)) (:name val)))
     sentence
     env))
 
 (defn say-something [env sts]
-  (let [words (bind-to-env (:sentence sts) env)
+  (let [words (resolve-aliases (:sentence sts) env)
         audio (:audio sts)]
     ; add word balloon to the world
     (w/add-thing world {:type :word-balloon
