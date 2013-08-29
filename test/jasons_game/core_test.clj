@@ -25,9 +25,9 @@
          (fact "personal pronouns are correctly identified"
                (parse-sentence-text "I love you")
                => '{:type :sentence
-                    :elements ( {:type :word, :text "I", :target :speaker}
-                                {:type :word, :text "love"}
-                                {:type :word, :text "you", :target :addressee})}))
+                    :elements [{:type :word, :text "I", :target :speaker}
+                               {:type :word, :text "love"}
+                               {:type :word, :text "you", :target :addressee}]}))
 	
 	(facts "about extracting text from sentence structures"
 	       (fact "text can be retrieved from a sentence structure"
@@ -40,6 +40,6 @@
 	             (let [sentence (parse-sentence-text "I love you")]
 	               (bind-to-env sentence env))
 	             => '{:type :sentence
-	                  :elements ( {:type :word, :text "I", :target {:name "Jason"}}
-	                              {:type :word, :text "love"}
-	                              {:type :word, :text "you", :target {:name "Daddy"}})})))
+	                  :elements [{:type :word, :text "I", :target {:name "Jason"}}
+                              {:type :word, :text "love"}
+                              {:type :word, :text "you", :target {:name "Daddy"}}]})))
