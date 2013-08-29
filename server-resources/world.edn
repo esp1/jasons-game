@@ -1,12 +1,6 @@
-{:type :person,
- :name "Christine",
- :location [335 281]}
-
-{:type :person,
- :name "Edwin",
- :location [654 215]}
-
+{:type :person, :name "Christine", :location [389 356]}
+{:type :person, :name "Edwin", :location [230 276]}
 {:type :word-balloon,
  :name :word-balloon,
- :location [654 178],
- :words "Hi"}
+ :location [230 239],
+ :words "Hello there Jason,"}

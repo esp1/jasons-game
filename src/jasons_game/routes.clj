@@ -2,6 +2,7 @@
   (:use compojure.core)
   (:require [clojure.edn :as edn]
             [clojure.java.io :refer [file reader]]
+            [clojure.pprint :refer [pprint]]
             [compojure.handler :as handler]
             [compojure.route :as route]
             [ring.middleware.format-response :refer [wrap-clojure-response]]))
@@ -15,8 +16,11 @@
       (pr-str (take-while (partial not= :theend) edn-seq)))))
 
 (defn save-world [world]
-  (spit "server-resources/world.edn" world)
-  "Saved")
+  (let [writer (java.io.StringWriter.)]
+    (doseq [obj (edn/read-string world)]
+      (pprint obj writer))
+    (spit "server-resources/world.edn" writer)
+    "Saved"))
 
 (defn get-resource
   [kind type encoding id]
