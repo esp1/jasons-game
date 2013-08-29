@@ -71,9 +71,9 @@
 (defmulti text
   "Extracts the text of a sentence, phrase, or word"
   :type)
-(defmethod text :sentence [sentence] (join " " (map text (sentence :elements))))
-(defmethod text :phrase [phrase] (join " " (map text (phrase :words))))
-(defmethod text :word [word] (word :text))
+(defmethod text :sentence [sentence] (join " " (map text (:elements sentence))))
+(defmethod text :phrase [phrase] (join " " (map text (:words phrase))))
+(defmethod text :word [word] (:text word))
 
 
 ;; Environment
