@@ -1,8 +1,8 @@
 (ns jasons-game.routes
-  (:use compojure.core)
   (:require [clojure.edn :as edn]
             [clojure.java.io :refer [file reader]]
             [clojure.pprint :refer [pprint]]
+            [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]
             [ring.middleware.format-response :refer [wrap-clojure-response]]))
