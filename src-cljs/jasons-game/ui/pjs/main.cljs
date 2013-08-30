@@ -46,12 +46,13 @@
 (defn word-at-a-time [words]
   (reverse (map (comp #(clojure.string/join " " %) reverse) (take-while #(< 0 (count %)) (iterate rest (reverse (split words #"\s")))))))
 
-(defn play-audio [audio]
-  (GET (str "/audio/ogg/base64/" audio) {:handler (fn [response]
-                                                    (dommy/replace! (sel1 :#audio)
-                                                                    [:audio {:id "audio", :autoplay true}
-                                                                     [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]]))
-                                         :error-handler alert-handler}))
+(defn play-audio [sentence]
+  (let [audio-file (replace (text sentence) \space \_)]
+    (GET (str "/audio/ogg/base64/" audio-file) {:handler (fn [response]
+                                                           (dommy/replace! (sel1 :#audio)
+                                                                           [:audio {:id "audio", :autoplay true}
+                                                                            [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]]))
+                                                :error-handler alert-handler})))
 
 (defn resolve-aliases [sentence env]
   (reduce
@@ -59,9 +60,8 @@
     sentence
     env))
 
-(defn say-something [env sts]
-  (let [words (resolve-aliases (text sts) env)
-        audio (:audio sts)]
+(defn say-something [env sentence]
+  (let [words (resolve-aliases (text sentence) env)]
     ; add word balloon to the world
     (w/add-thing world {:type :word-balloon
                         :name :word-balloon
@@ -79,7 +79,7 @@
           (<! (timeout 500)))))
     
     ; play audio
-    (play-audio audio)))
+    (play-audio sentence)))
 
 (defn say [env]
   (GET "/something-to-say" {:handler #(say-something env %)

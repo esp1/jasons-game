@@ -1,15 +1,13 @@
 {:type :sentence
+ :elements [{:type :word, :text "I", :refers-to :speaker}
+            {:type :word, :text "love"}
+            {:type :word, :text "you", :refers-to :audience}]}
+
+{:type :sentence
  :elements [{:type :word, :text "Hello"}
             {:type :word, :text "there"}
             {:type :word, :text :audience}
             {:type :word, :text "my"}
             {:type :word, :text "name"}
             {:type :word, :text "is"}
-            {:type :word, :text :speaker}]
- :audio "hello_there"}
-
-{:type :sentence
- :elements [{:type :word, :text "I", :refers-to :speaker}
-            {:type :word, :text "love"}
-            {:type :word, :text "you", :refers-to :audience}]
- :audio "hello_there"}
+            {:type :word, :text :speaker}]}
