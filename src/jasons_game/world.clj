@@ -1,6 +1,10 @@
 (ns jasons-game.world
   (:require [jasons-game.thing :as t]))
 
+(defn atom? [x]
+  (instance? clojure.lang.Atom x))
+
+
 ;; Things
 
 (defn get-thing
@@ -8,9 +12,11 @@
   (@world name))
 
 (defn add-thing
-  "Adds a thing to the world. The thing will be wrapped in an atom."
+  "Adds a thing to the world. The thing will be wrapped in an atom if it is not an atom already."
   [world thing]
-  (swap! world assoc (:name thing) (atom thing)))
+  (swap! world assoc (:name thing) (if (atom? thing)
+                                     thing
+                                     (atom thing))))
 
 (defn remove-thing
   "Removes a thing from the world"

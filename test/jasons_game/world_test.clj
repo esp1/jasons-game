@@ -3,9 +3,6 @@
             [jasons-game.world :refer :all]
             [midje.sweet :refer :all]))
 
-(defn atom? [x]
-  (instance? clojure.lang.Atom x))
-
 (deftest world
 	(facts "about the world"
 	       (fact "a new world is an atom"
