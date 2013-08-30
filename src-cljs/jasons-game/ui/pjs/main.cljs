@@ -4,9 +4,9 @@
   (:require [ajax.core :refer [GET POST]]
             [cljs.core.async :as async :refer [<! go timeout]]
             [clojure.browser.repl :as repl]
-            [clojure.string :refer [replace split]]
-            [dommy.core :as dommy :refer [listen!]]
-            [jasons-game.core :refer [text]]
+            [clojure.string :refer [split]]
+            [dommy.core :as dommy]
+            [jasons-game.core :refer [resolve-aliases text]]
             [jasons-game.thing :as t]
             [jasons-game.ui.pjs.draw :as d]
             [jasons-game.world :as w]
@@ -53,12 +53,6 @@
                                                                            [:audio {:id "audio", :autoplay true}
                                                                             [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]]))
                                                 :error-handler alert-handler})))
-
-(defn resolve-aliases [sentence env]
-  (reduce
-    (fn [s [key val]] (clojure.string/replace s (str ":" (name key)) (:name val)))
-    sentence
-    env))
 
 (defn say-something [env sentence]
   (let [words (resolve-aliases (text sentence) env)]

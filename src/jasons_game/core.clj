@@ -65,7 +65,6 @@
                  1 (create-word (first words))
                  (create-phrase words)))})
 
-
 ;; Extracting text from sentence structures
 
 (defmulti text
@@ -89,3 +88,9 @@
   instances of objects in the world"
   [sentence env]
   (postwalk-replace env sentence))
+
+(defn resolve-aliases [sentence env]
+  (reduce
+    (fn [s [key val]] (clojure.string/replace s (str ":" (name key)) (:name val)))
+    sentence
+    env))
