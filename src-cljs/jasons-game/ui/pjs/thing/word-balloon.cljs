@@ -35,4 +35,4 @@
 
 (defmethod t/bounds-in-local :word-balloon
   [word-balloon]
-  [0 0 0 0])
+  [0 0 0 0])  ; no hit detection for word balloons
