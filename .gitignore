@@ -15,3 +15,4 @@ pom.xml.asc
 /out
 /repl
 /crossover-cljs
+.DS_Store
