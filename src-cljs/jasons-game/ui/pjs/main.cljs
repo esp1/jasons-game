@@ -6,6 +6,7 @@
             [clojure.browser.repl :as repl]
             [clojure.string :refer [replace split]]
             [dommy.core :as dommy :refer [listen!]]
+            [jasons-game.core :refer [text]]
             [jasons-game.thing :as t]
             [jasons-game.ui.pjs.draw :as d]
             [jasons-game.world :as w]
@@ -59,7 +60,7 @@
     env))
 
 (defn say-something [env sts]
-  (let [words (resolve-aliases (:sentence sts) env)
+  (let [words (resolve-aliases (text sts) env)
         audio (:audio sts)]
     ; add word balloon to the world
     (w/add-thing world {:type :word-balloon
@@ -113,7 +114,7 @@
       (w/move-thing thing [mx my]))))
 
 (defn key-pressed []
-  (let [key (.toString (s/get-key))] 
+  (let [key (.toString (s/get-key))]
     (when (= key "s")
       (POST "/save-world" {:params {:world (pr-str (map deref (vals @world)))}
                            :handler alert-handler

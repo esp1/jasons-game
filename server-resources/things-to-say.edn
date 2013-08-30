@@ -1,5 +1,15 @@
-{:sentence "Hello there :addressee, my name is :speaker"
+{:type :sentence
+ :elements [{:type :word, :text "Hello"}
+            {:type :word, :text "there"}
+            {:type :word, :text :addressee}
+            {:type :word, :text "my"}
+            {:type :word, :text "name"}
+            {:type :word, :text "is"}
+            {:type :word, :text :speaker}]
  :audio "hello_there"}
 
-{:sentence "Hey :addressee"
+{:type :sentence
+ :elements [{:type :word, :text "I", :target :speaker}
+            {:type :word, :text "love"}
+            {:type :word, :text "you", :target :addressee}]
  :audio "hello_there"}
