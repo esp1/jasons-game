@@ -31,14 +31,19 @@
 	
 	(facts "about extracting text from sentence structures"
 	       (fact "text can be retrieved from a sentence structure"
-	             (let [sentence (parse-sentence-text "I love you")]
-	               (text sentence))
+              (text '{:type :sentence
+                      :elements [{:type :word, :text "I", :target :speaker}
+                                 {:type :word, :text "love"}
+                                 {:type :word, :text "you", :target :addressee}]})
 	             => "I love you"))
 	
 	(facts "about environment binding"
 	       (fact "target values should be replaced with values in the environment"
-	             (let [sentence (parse-sentence-text "I love you")]
-	               (bind-to-env sentence env))
+              (bind-to-env '{:type :sentence
+                             :elements [{:type :word, :text "I", :target :speaker}
+                                        {:type :word, :text "love"}
+                                        {:type :word, :text "you", :target :addressee}]}
+                           env)
 	             => '{:type :sentence
 	                  :elements [{:type :word, :text "I", :target {:name "Jason"}}
                               {:type :word, :text "love"}
