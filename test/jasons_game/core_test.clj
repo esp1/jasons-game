@@ -38,7 +38,25 @@
                       :elements [{:type :word, :text "I", :refers-to :speaker}
                                  {:type :word, :text "love"}
                                  {:type :word, :text "you", :refers-to :audience}]})
-	             => "I love you"))
+	             => "I love you")
+        (fact "sentence punctuation works"
+              (text '{:type :sentence
+                      :elements [{:type :word, :text "I", :refers-to :speaker}
+                                 {:type :word, :text "love"}
+                                 {:type :word, :text "you", :refers-to :audience}]
+                      :end-punctuation \!})
+              => "I love you!")
+        (fact "phrase punctuation works"
+              (text '{:type :sentence
+                      :elements [{:type :phrase
+                                  :words [{:type :word, :text "Hi"}
+                                          {:type :word, :text "there"}]
+                                  :end-punctuation \,}
+                                 {:type :word, :text "how"}
+                                 {:type :word, :text "are"}
+                                 {:type :word, :text "you", :refers-to :audience}]
+                      :end-punctuation \?})
+              => "Hi there, how are you?"))
 	
 	(facts "about environment binding"
 	       (fact "refers-to values should be replaced with values in the environment"

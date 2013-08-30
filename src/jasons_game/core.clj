@@ -71,9 +71,15 @@
 (defmulti text
   "Extracts the text of a sentence, phrase, or word"
   :type)
-(defmethod text :sentence [sentence] (join " " (map text (:elements sentence))))
-(defmethod text :phrase [phrase] (join " " (map text (:words phrase))))
-(defmethod text :word [word] (:text word))
+(defmethod text :sentence [sentence] (str (when-let [p (:start-punctuation sentence)] p)
+                                          (join " " (map text (:elements sentence)))
+                                          (when-let [p (:end-punctuation sentence)] p)))
+(defmethod text :phrase [phrase] (str (when-let [p (:start-punctuation phrase)] p)
+                                      (join " " (map text (:words phrase)))
+                                      (when-let [p (:end-punctuation phrase)] p)))
+(defmethod text :word [word] (str (when-let [p (:start-punctuation word)] p)
+                                  (:text word)
+                                  (when-let [p (:end-punctuation word)] p)))
 
 
 ;; Environment
