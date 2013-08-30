@@ -3,11 +3,12 @@
   :url "http://github.com/esp1/jasons-game"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojure/core.async "0.1.0-SNAPSHOT"]
-                 [cljs-ajax "0.1.6"]
+  :dependencies [[cljs-ajax "0.1.6"]
+                 [com.datomic/datomic-free "0.8.4143"]
                  [compojure "1.1.5"]
                  [jayq "2.4.0"]
+                 [org.clojure/clojure "1.5.1"]
+                 [org.clojure/core.async "0.1.0-SNAPSHOT"]
                  [prismatic/dommy "0.1.1"]
                  [ring-middleware-format "0.3.1"]]
   :repositories {"sonatype-oss-public" "https://oss.sonatype.org/content/groups/public/"}
