@@ -116,9 +116,9 @@
 (defn key-pressed []
   (let [key (.toString (s/get-key))]
     (when (= key "s")
-      (POST "/save-world" {:params {:world (pr-str (map deref (vals @world)))}
-                           :handler alert-handler
-                           :error-handler #(js/alert (pr-str "Save error:" %))}))))
+      (POST "/world" {:params {:world (pr-str (map deref (vals @world)))}
+                      :handler alert-handler
+                      :error-handler #(js/alert (pr-str "Save error:" %))}))))
 
 (defn init []
   (repl/connect "http://localhost:9000/repl")

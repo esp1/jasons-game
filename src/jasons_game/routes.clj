@@ -45,7 +45,7 @@
 (defroutes app-routes
   ; load/save world state
   (GET "/world" [] (load-world))
-  (POST "/save-world" [world] (save-world world))
+  (POST "/world" [world] (save-world world))
   
   ; media resources
   (GET "/:kind/:type/:id" [kind type encoding id] (get-resource kind type nil id))
