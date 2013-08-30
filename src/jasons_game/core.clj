@@ -34,7 +34,7 @@
                                           (let [pronoun (first pronoun-info)
                                                 pronoun-target (second pronoun-info)]
                                             (when (= (lower-case pronoun) (lower-case word-text))
-                                              {:target pronoun-target})))))))
+                                              {:refers-to pronoun-target})))))))
 
 (defn create-phrase
   [phrase-text]

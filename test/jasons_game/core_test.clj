@@ -25,26 +25,26 @@
          (fact "personal pronouns are correctly identified"
                (parse-sentence-text "I love you")
                => '{:type :sentence
-                    :elements [{:type :word, :text "I", :target :speaker}
+                    :elements [{:type :word, :text "I", :refers-to :speaker}
                                {:type :word, :text "love"}
-                               {:type :word, :text "you", :target :audience}]}))
+                               {:type :word, :text "you", :refers-to :audience}]}))
 	
 	(facts "about extracting text from sentence structures"
 	       (fact "text can be retrieved from a sentence structure"
               (text '{:type :sentence
-                      :elements [{:type :word, :text "I", :target :speaker}
+                      :elements [{:type :word, :text "I", :refers-to :speaker}
                                  {:type :word, :text "love"}
-                                 {:type :word, :text "you", :target :audience}]})
+                                 {:type :word, :text "you", :refers-to :audience}]})
 	             => "I love you"))
 	
 	(facts "about environment binding"
-	       (fact "target values should be replaced with values in the environment"
+	       (fact "refers-to values should be replaced with values in the environment"
               (bind-to-env '{:type :sentence
-                             :elements [{:type :word, :text "I", :target :speaker}
+                             :elements [{:type :word, :text "I", :refers-to :speaker}
                                         {:type :word, :text "love"}
-                                        {:type :word, :text "you", :target :audience}]}
+                                        {:type :word, :text "you", :refers-to :audience}]}
                            env)
 	             => '{:type :sentence
-	                  :elements [{:type :word, :text "I", :target {:name "Jason"}}
+	                  :elements [{:type :word, :text "I", :refers-to {:name "Jason"}}
                               {:type :word, :text "love"}
-                              {:type :word, :text "you", :target {:name "Daddy"}}]})))
+                              {:type :word, :text "you", :refers-to {:name "Daddy"}}]})))

@@ -9,7 +9,7 @@
  :audio "hello_there"}
 
 {:type :sentence
- :elements [{:type :word, :text "I", :target :speaker}
+ :elements [{:type :word, :text "I", :refers-to :speaker}
             {:type :word, :text "love"}
-            {:type :word, :text "you", :target :audience}]
+            {:type :word, :text "you", :refers-to :audience}]
  :audio "hello_there"}
