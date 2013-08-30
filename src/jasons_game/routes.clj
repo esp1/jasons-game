@@ -26,7 +26,7 @@
 
 (defn get-resource
   [kind type encoding id]
-  (let [r (str (java.net.URLEncoder/encode id) "." type)
+  (let [r (str (java.net.URLDecoder/decode id) "." type)
         f (file (str "server-resources/" kind) (if encoding
                                                  (str r "." encoding)
                                                  r))]
