@@ -47,7 +47,7 @@
   (reverse (map (comp #(clojure.string/join " " %) reverse) (take-while #(< 0 (count %)) (iterate rest (reverse (split words #"\s")))))))
 
 (defn play-audio [sentence]
-  (let [audio-file (replace (text sentence) \space \_)]
+  (let [audio-file (js/encodeURIComponent (text sentence))]
     (GET (str "/audio/ogg/base64/" audio-file) {:handler (fn [response]
                                                            (dommy/replace! (sel1 :#audio)
                                                                            [:audio {:id "audio", :autoplay true}

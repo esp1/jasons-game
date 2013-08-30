@@ -1,7 +1,8 @@
 {:type :sentence
  :elements [{:type :word, :text "I", :refers-to :speaker}
             {:type :word, :text "love"}
-            {:type :word, :text "you", :refers-to :audience}]}
+            {:type :word, :text "you", :refers-to :audience}]
+ :end-punctuation \!}
 
 {:type :sentence
  :elements [{:type :word, :text "Hello"}
