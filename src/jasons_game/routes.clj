@@ -7,8 +7,7 @@
             [compojure.route :as route]
             [ring.middleware.format-response :refer [wrap-clojure-response]]))
 
-(defn something-to-say []
-  (pr-str (edn/read-string (slurp "server-resources/things-to-say.edn"))))
+;; Load/Save world state
 
 (defn load-world []
   (with-open [in (java.io.PushbackReader. (reader "server-resources/world.edn"))]
@@ -22,6 +21,9 @@
     (spit "server-resources/world.edn" writer)
     "Saved"))
 
+
+;; Media resources
+
 (defn get-resource
   [kind type encoding id]
   (let [r (str id "." type)
@@ -32,14 +34,27 @@
       (slurp f))))
 
 
+;; Conversation resources
+
+(defn something-to-say []
+  (pr-str (edn/read-string (slurp "server-resources/things-to-say.edn"))))
+
+
 ;; Routes
 
 (defroutes app-routes
-  (GET "/something-to-say" [] (something-to-say))
+  ; load/save world state
   (GET "/world" [] (load-world))
   (POST "/save-world" [world] (save-world world))
+  
+  ; media resources
   (GET "/:kind/:type/:id" [kind type encoding id] (get-resource kind type nil id))
   (GET "/:kind/:type/:encoding/:id" [kind type encoding id] (get-resource kind type encoding id))
+  
+  ; conversation resources
+  (GET "/something-to-say" [] (something-to-say))
+  
+  ; default routes
   (route/resources "/")
   (route/not-found "Not Found"))
 
