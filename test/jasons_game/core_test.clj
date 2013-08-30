@@ -15,7 +15,7 @@
 (def mommy {:name "Mommy"})
 
 ;; Environment
-(def env {:speaker jason, :addressee daddy})
+(def env {:speaker jason, :audience daddy})
 
 
 ;; Tests
@@ -27,14 +27,14 @@
                => '{:type :sentence
                     :elements [{:type :word, :text "I", :target :speaker}
                                {:type :word, :text "love"}
-                               {:type :word, :text "you", :target :addressee}]}))
+                               {:type :word, :text "you", :target :audience}]}))
 	
 	(facts "about extracting text from sentence structures"
 	       (fact "text can be retrieved from a sentence structure"
               (text '{:type :sentence
                       :elements [{:type :word, :text "I", :target :speaker}
                                  {:type :word, :text "love"}
-                                 {:type :word, :text "you", :target :addressee}]})
+                                 {:type :word, :text "you", :target :audience}]})
 	             => "I love you"))
 	
 	(facts "about environment binding"
@@ -42,7 +42,7 @@
               (bind-to-env '{:type :sentence
                              :elements [{:type :word, :text "I", :target :speaker}
                                         {:type :word, :text "love"}
-                                        {:type :word, :text "you", :target :addressee}]}
+                                        {:type :word, :text "you", :target :audience}]}
                            env)
 	             => '{:type :sentence
 	                  :elements [{:type :word, :text "I", :target {:name "Jason"}}

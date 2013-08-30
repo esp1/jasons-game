@@ -6,10 +6,10 @@
 
 (def pronouns {:personal {"I" :speaker
                           "me" :speaker
-                          "you" :addressee}
+                          "you" :audience}
                :posessive {"my" :speaker
                            "mine" :speaker
-                           "your" :addressee}})
+                           "your" :audience}})
 
 
 ;; Parsing text into sentence structures
@@ -79,7 +79,7 @@
 ;; Environment
 
 (defn bind-to-env
-  "Binds an environment to a sentence. The environment is a map of things like :speaker and :addressee to particular
+  "Binds an environment to a sentence. The environment is a map of things like :speaker and :audience to particular
   instances of objects in the world"
   [sentence env]
   (postwalk-replace env sentence))

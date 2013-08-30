@@ -1,7 +1,7 @@
 {:type :sentence
  :elements [{:type :word, :text "Hello"}
             {:type :word, :text "there"}
-            {:type :word, :text :addressee}
+            {:type :word, :text :audience}
             {:type :word, :text "my"}
             {:type :word, :text "name"}
             {:type :word, :text "is"}
@@ -11,5 +11,5 @@
 {:type :sentence
  :elements [{:type :word, :text "I", :target :speaker}
             {:type :word, :text "love"}
-            {:type :word, :text "you", :target :addressee}]
+            {:type :word, :text "you", :target :audience}]
  :audio "hello_there"}

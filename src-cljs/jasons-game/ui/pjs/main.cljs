@@ -105,7 +105,7 @@
 (defn mouse-released []
   (when-let [thing (w/get-thing-at-location world [(s/mouse-x) (s/mouse-y)])]
     (say {:speaker @thing
-          :addressee me})))
+          :audience me})))
 
 (defn mouse-dragged []
   (let [mx (s/mouse-x)
