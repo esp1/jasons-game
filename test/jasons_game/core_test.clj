@@ -3,6 +3,9 @@
             [jasons-game.core :refer :all]
             [midje.sweet :refer :all]))
 
+(defn atom? [x]
+  (instance? clojure.lang.Atom x))
+
 ;; Sentence text
 ;(def sentence-text "I am happy to meet you")
 ;(def sentence-text "I love you!")
