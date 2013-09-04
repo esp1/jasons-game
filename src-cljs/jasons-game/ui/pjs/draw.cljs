@@ -73,12 +73,14 @@
                       (swap! image-cache assoc id loaded-image)) ; return the cached image
       :else val)
     
-    ; not loaded yet, go get it via alax call
-    (go (let [response (<! (ch-get (str "/image/png/base64/" id)
-                                   #(swap! image-cache assoc id :not-found)))]
-          ; can't call s/load-image here because we're not in the dynamic scope for the *processing* binding
-          ; so just store the base64 image data in the map
-          (swap! image-cache assoc id response)))))
+    ; not loaded yet, go get it
+    (go (try
+          (let [response (<! (ch-get (str "/image/png/base64/" id)))]
+            ; can't call s/load-image here because we're not in the dynamic scope for the *processing* binding
+            ; so just store the base64 image data in the map
+            (swap! image-cache assoc id response))
+          (catch js/Error err
+            (swap! image-cache assoc id :not-found))))))
 
 
 ;; Cursor

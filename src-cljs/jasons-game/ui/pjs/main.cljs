@@ -56,8 +56,8 @@
        (fn []
          (s/size 1000 600)
          (s/text-font (s/create-font "Arial" 32))
-         (go (let [response (<! (ch-get "/world"))]
-               (doseq [thing response]
+         (go (let [things (<! (ch-get "/world"))]
+               (doseq [thing things]
                  (world/add-thing world/the-world thing)))))
        
        :draw
