@@ -1,19 +1,15 @@
 (ns jasons-game.ui.pjs.main
   (:require-macros [dommy.macros :refer [sel1]]
-                   [cljs.core.async.macros :as m :refer [go]])
-  (:require [ajax.core :refer [GET POST]]
-            [cljs.core.async :as async :refer [<! go timeout]]
+                   [cljs.core.async.macros :refer [go]])
+  (:require [cljs.core.async :as async :refer [<! go timeout]]
             [clojure.browser.repl]
             [dommy.core :as dommy]
             [jasons-game.core :refer [text]]
             [jasons-game.thing :as thing]
             [jasons-game.ui.pjs.draw :as draw]
+            [jasons-game.ui.util :refer [ch-get ch-post]]
             [jasons-game.world :as world]
             [libre.sketch :as s]))
-
-(defn alert-handler [response]
-  (js/alert response))
-
 
 ;; World
 
@@ -27,18 +23,16 @@
 
 (defn animate-text [words]
   (let [athing (world/get-thing world/the-world :word-balloon)]
-    (go
-      (doseq [w (word-at-a-time words)]
-        (world/modify-thing athing :words w)
-        (<! (timeout 500))))))
+    (go (doseq [w (word-at-a-time words)]
+          (world/modify-thing athing :words w)
+          (<! (timeout 500))))))
 
 (defn play-audio [sentence]
   (let [audio-file (js/encodeURIComponent (text sentence))]
-    (GET (str "/audio/ogg/base64/" audio-file) {:handler (fn [response]
-                                                           (dommy/replace! (sel1 :#audio)
-                                                                           [:audio {:id "audio", :autoplay true}
-                                                                            [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]]))
-                                                :error-handler alert-handler})))
+    (go (let [response (<! (ch-get (str "/audio/ogg/base64/" audio-file)))]
+          (dommy/replace! (sel1 :#audio)
+                          [:audio {:id "audio", :autoplay true}
+                           [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]])))))
 
 (defn say-something [env sentence]
   (world/create-word-balloon env sentence)
@@ -46,8 +40,8 @@
   (play-audio sentence))
 
 (defn say [env]
-  (GET "/something-to-say" {:handler #(say-something env %)
-                            :error-handler alert-handler}))
+  (go (let [response (<! (ch-get "/something-to-say"))]
+        (say-something env response))))
 
 
 ;; Sketch
@@ -62,10 +56,9 @@
        (fn []
          (s/size 1000 600)
          (s/text-font (s/create-font "Arial" 32))
-         (GET "/world" {:handler (fn [response]
-                                   (doseq [thing response]
-                                     (world/add-thing world/the-world thing)))
-                        :error-handler alert-handler}))
+         (go (let [response (<! (ch-get "/world"))]
+               (doseq [thing response]
+                 (world/add-thing world/the-world thing)))))
        
        :draw
        (fn []
@@ -94,6 +87,6 @@
        (fn []
          (let [key (.toString (s/get-key))]
            (when (= key "s")
-             (POST "/world" {:params {:world (pr-str (map deref (vals @world/the-world)))}
-                             :handler alert-handler
-                             :error-handler #(js/alert (pr-str "Save error:" %))}))))})))
+             (go (let [response (<! (ch-post "/world"
+                                             {:world (pr-str (map deref (vals @world/the-world)))}))]
+                    (js/alert response))))))})))

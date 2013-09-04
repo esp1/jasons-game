@@ -1,8 +1,9 @@
 (ns jasons-game.ui.pjs.draw
-  (:require-macros [dommy.macros :refer [sel1]])
-  (:require [ajax.core :refer [GET]]
-            [clojure.string :refer [split]]
+  (:require-macros [dommy.macros :refer [sel1]]
+                   [cljs.core.async.macros :refer [go]])
+  (:require [clojure.string :refer [split]]
             [dommy.core :as dommy]
+            [jasons-game.ui.util :refer [ch-get]]
             [libre.sketch :as s]))
 
 ;; Styles
@@ -73,11 +74,11 @@
       :else val)
     
     ; not loaded yet, go get it via alax call
-    (GET (str "/image/png/base64/" id) {:handler (fn [response]
-                                                  ; can't call s/load-image here because we're not in the dynamic scope for the *processing* binding
-                                                  (swap! image-cache assoc id response))
-                                       :error-handler (fn [response]
-                                                        (swap! image-cache assoc id :not-found))})))  ; so just store the base64 image data in the map
+    (go (let [response (<! (ch-get (str "/image/png/base64/" id)
+                                   #(swap! image-cache assoc id :not-found)))]
+          ; can't call s/load-image here because we're not in the dynamic scope for the *processing* binding
+          ; so just store the base64 image data in the map
+          (swap! image-cache assoc id response)))))
 
 
 ;; Cursor
