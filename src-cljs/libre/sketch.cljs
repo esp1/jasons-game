@@ -546,13 +546,3 @@
     (arc (random (sketch-width))
          (random (sketch-height))
          diameter)))
-
-(defn run-sketch [canvas sketch]
-  (let [target (cond
-                (string? canvas)
-                (.get (jayq.core/$ canvas) 0)
-                (keyword? canvas)
-                (.get (jayq.core/$ canvas) 0)
-                true
-                canvas)]
-    (js/Processing. target (sketch-init sketch))))

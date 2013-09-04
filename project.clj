@@ -6,7 +6,6 @@
   :dependencies [[cljs-ajax "0.1.6"]
                  [com.datomic/datomic-free "0.8.4143"]
                  [compojure "1.1.5"]
-                 [jayq "2.4.0"]
                  [org.clojure/clojure "1.5.1"]
                  [org.clojure/core.async "0.1.0-SNAPSHOT"]
                  [prismatic/dommy "0.1.1"]
