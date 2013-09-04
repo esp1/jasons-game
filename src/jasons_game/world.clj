@@ -1,5 +1,6 @@
 (ns jasons-game.world
-  (:require [jasons-game.thing :as t]))
+  (:require [jasons-game.core :refer [resolve-aliases text]]
+            [jasons-game.thing :as thing]))
 
 ;; Things
 
@@ -37,10 +38,26 @@
                   (add-thing world thing))
                 world)))
 
+(def the-world (new-world))
+
 (defn get-contents
   [world]
   (vals @world))
 
 (defn get-thing-at-location
   [world location]
-  (first (filter #(t/contains-location (deref %) location) (get-contents world))))
+  (first (filter #(thing/contains-location (deref %) location) (get-contents world))))
+
+
+;; Word balloon
+
+(defn create-word-balloon [env sentence]
+  (let [words (resolve-aliases (text sentence) env)]
+    ; add word balloon to the world
+    (add-thing the-world {:type :word-balloon
+                          :name :word-balloon
+                          :location (let [speaker (:speaker env)
+                                          [x y] (:location speaker)
+                                          [x0 y0 w h] (thing/bounds-in-local speaker)]
+                                      [x (+ y y0)])  ; posiiton word balloon over top center of thing
+                          :words ""})))

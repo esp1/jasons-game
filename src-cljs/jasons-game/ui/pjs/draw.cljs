@@ -78,3 +78,20 @@
                                                   (swap! image-cache assoc id response))
                                        :error-handler (fn [response]
                                                         (swap! image-cache assoc id :not-found))})))  ; so just store the base64 image data in the map
+
+
+;; Cursor
+
+(def cursor-size 10)
+
+(defn draw-cursor
+  "Draws a cursor at the specified coordinate"
+  [x y]
+  ; draw crosshairs
+  (translate [x y]
+             {:stroke 0}
+             (fn []
+               (s/line (- cursor-size) 0, cursor-size 0)
+               (s/line 0 (- cursor-size), 0 cursor-size)))
+  ; display coordinates in text box
+  (set-text-box! [:div "x:" [:span.highlight x] ", y:" [:span.highlight y]]))
