@@ -4,24 +4,14 @@
 
 ;; Things
 
-(defn get-thing
-  [world name]
-  (@world name))
+(defn get-things
+  [world]
+  (:things @world))
 
 (defn add-thing
   "Adds a thing to the world. The thing will be wrapped in an atom."
   [world thing]
-  (swap! world assoc (:name thing) (atom thing)))
-
-(defn remove-thing
-  "Removes a thing from the world"
-  [world name]
-  (swap! world dissoc name))
-
-(defn move-thing
-  "Changes the location of a thing"
-  [thing location]
-  (swap! thing assoc :location location))
+  (swap! world update-in [:things] conj (atom thing)))
 
 (defn modify-thing
   "Changes an attribute of a thing"
@@ -30,34 +20,23 @@
 
 
 ;; World
-; The world is an ordered map of objects.
-; The order of the objects indicates their z-ordering when they are drawn.
+;; {:things [ ... ]  ; z-ordered things
+;;  :words { :context { ... }
+;;           :sentence { ... } }}
+
 (defn new-world
-  ([& things] (let [world (atom (sorted-map))]
+  ([& things] (let [world (atom {})]
                 (doseq [thing things]
                   (add-thing world thing))
                 world)))
 
 (def the-world (new-world))
 
-(defn get-contents
-  [world]
-  (vals @world))
-
 (defn get-thing-at-location
   [world location]
-  (first (filter #(thing/contains-location (deref %) location) (get-contents world))))
+  (first (filter #(thing/contains-location (deref %) location) (:things @world))))
 
 
-;; Word balloon
-
-(defn create-word-balloon [env sentence]
-  (let [words (resolve-aliases (text sentence) env)]
-    ; add word balloon to the world
-    (add-thing the-world {:type :word-balloon
-                          :name :word-balloon
-                          :location (let [speaker (:speaker env)
-                                          [x y] (:location speaker)
-                                          [x0 y0 w h] (thing/bounds-in-local speaker)]
-                                      [x (+ y y0)])  ; posiiton word balloon over top center of thing
-                          :words ""})))
+(defn say-something [context sentence]
+  (swap! the-world assoc :words {:context context
+                                 :sentence sentence}))

@@ -8,6 +8,7 @@
             [jasons-game.thing :as thing]
             [jasons-game.ui.pjs.draw :as draw]
             [jasons-game.ui.util :refer [ch-get ch-post]]
+            [jasons-game.ui.pjs.word-balloon :as word-balloon]
             [jasons-game.world :as world]
             [libre.sketch :as s]))
 
@@ -29,19 +30,15 @@
 
 (defn play-audio [sentence]
   (let [audio-file (js/encodeURIComponent (text sentence))]
-    (go (let [response (<! (ch-get (str "/audio/ogg/base64/" audio-file)))]
+    (go (let [audio-data (<! (ch-get (str "/audio/ogg/base64/" audio-file)))]
           (dommy/replace! (sel1 :#audio)
                           [:audio {:id "audio", :autoplay true}
-                           [:source {:src (str "data:audio/ogg;base64," response), :type "audio/ogg"}]])))))
+                           [:source {:src (str "data:audio/ogg;base64," audio-data), :type "audio/ogg"}]])))))
 
-(defn say-something [env sentence]
-  (world/create-word-balloon env sentence)
-  (animate-text (text sentence))
-  (play-audio sentence))
-
-(defn say [env]
-  (go (let [response (<! (ch-get "/something-to-say"))]
-        (say-something env response))))
+(defn say [context]
+  (go (let [sentence (<! (ch-get "/something-to-say"))]
+        (world/say-something context sentence)
+        (play-audio sentence))))
 
 
 ;; Sketch
@@ -65,8 +62,16 @@
          (let [mx (s/mouse-x), my (s/mouse-y)]
            (s/background 100 200 255)
            
-           (doseq [thing (world/get-contents world/the-world)]
+           (doseq [thing (world/get-things world/the-world)]
              (thing/draw @thing))
+
+           (when-let [words (:words @world/the-world)]
+             ; draw a world bubble over the speaker
+             (let [speaker (get-in words [:context :speaker])
+                   [x y] (:location speaker)
+                   [x0 y0 w h] (thing/bounds-in-local speaker)]
+               (word-balloon/draw [x (+ y y0)]  ; position word balloon over top center of speaker
+                                  (:sentence words))))
            
            (draw/draw-cursor mx my)))
        
@@ -81,12 +86,11 @@
          (let [mx (s/mouse-x)
                my (s/mouse-y)]
            (when-let [thing (world/get-thing-at-location world/the-world [mx my])]
-             (world/move-thing thing [mx my]))))
+             (world/modify-thing thing :location [mx my]))))
        
        :key-pressed
        (fn []
          (let [key (.toString (s/get-key))]
-           (when (= key "s")
-             (go (let [response (<! (ch-post "/world"
-                                             {:world (pr-str (map deref (vals @world/the-world)))}))]
+           (when (= key "s")  ; Save
+             (go (let [response (<! (ch-post "/world" {:world (pr-str (map deref (world/get-things world/the-world)))}))]
                     (js/alert response))))))})))

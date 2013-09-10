@@ -1,5 +1,5 @@
 (ns jasons-game.ui.pjs.word-balloon
-  (:require [jasons-game.thing :as t]
+  (:require [jasons-game.core :refer [text]]
             [jasons-game.ui.pjs.draw :as d]
             [libre.sketch :as s]))
 
@@ -7,10 +7,10 @@
 (def point-width 20)
 (def point-height 40)
 
-(defmethod t/draw :word-balloon
-  [word-balloon]
-  (d/translate (:location word-balloon)
-               (let [words (:words word-balloon)
+(defn draw
+  [location sentence]
+  (d/translate location
+               (let [words (text sentence)
                      balloon-width (+ (s/text-width words) 40)
                      balloon-height (+ (s/text-ascent) (s/text-descent) 40)]
                  (fn []
@@ -32,7 +32,3 @@
                    (d/style {:fill 50}
                             (fn []
                               (s/text words 20 (+ 20 (s/text-ascent)))))))))
-
-(defmethod t/bounds-in-local :word-balloon
-  [word-balloon]
-  [0 0 0 0])  ; no hit detection for word balloons

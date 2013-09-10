@@ -5,8 +5,8 @@
             [ring.mock.request :refer :all]))
 
 (deftest routes
-	(facts "about routes"
-	  (fact "main route should return 200 ok"
+	(facts "Routes"
+	  (fact "Main route should return 200 ok"
 	        (let [response (app (request :get "/"))]
 	          (:status response))
 	        => 200)

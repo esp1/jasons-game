@@ -24,29 +24,29 @@
 ;; Tests
 
 (deftest core
-  (facts "about parsing text into sentence structures"
-         (fact "personal pronouns are correctly identified"
+  (facts "Parsing text into sentence structures"
+         (fact "Personal pronouns are correctly identified"
                (parse-sentence-text "I love you")
                => '{:type :sentence
                     :elements [{:type :word, :text "I", :refers-to :speaker}
                                {:type :word, :text "love"}
                                {:type :word, :text "you", :refers-to :audience}]}))
 	
-	(facts "about extracting text from sentence structures"
-	       (fact "text can be retrieved from a sentence structure"
+	(facts "Extracting text from sentence structures"
+	       (fact "Text can be retrieved from a sentence structure"
               (text '{:type :sentence
                       :elements [{:type :word, :text "I", :refers-to :speaker}
                                  {:type :word, :text "love"}
                                  {:type :word, :text "you", :refers-to :audience}]})
 	             => "I love you")
-        (fact "sentence punctuation works"
+        (fact "Sentence punctuation works"
               (text '{:type :sentence
                       :elements [{:type :word, :text "I", :refers-to :speaker}
                                  {:type :word, :text "love"}
                                  {:type :word, :text "you", :refers-to :audience}]
                       :end-punctuation \!})
               => "I love you!")
-        (fact "phrase punctuation works"
+        (fact "Phrase punctuation works"
               (text '{:type :sentence
                       :elements [{:type :phrase
                                   :words [{:type :word, :text "Hi"}
@@ -58,8 +58,8 @@
                       :end-punctuation \?})
               => "Hi there, how are you?"))
 	
-	(facts "about environment binding"
-	       (fact "refers-to values should be replaced with values in the environment"
+	(facts "Environment binding"
+	       (fact "Refers-to values should be replaced with values in the environment"
               (bind-to-env '{:type :sentence
                              :elements [{:type :word, :text "I", :refers-to :speaker}
                                         {:type :word, :text "love"}

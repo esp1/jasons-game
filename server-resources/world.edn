@@ -1,6 +1,2 @@
 {:type :person, :name "Christine", :location [389 356]}
 {:type :person, :name "Edwin", :location [230 276]}
-{:type :word-balloon,
- :name :word-balloon,
- :location [230 239],
- :words "Hello there Jason,"}
