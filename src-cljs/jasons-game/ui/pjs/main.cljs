@@ -65,13 +65,13 @@
            (doseq [thing (world/get-things world/the-world)]
              (thing/draw @thing))
 
-           (when-let [words (:words @world/the-world)]
+           (when-let [dialogue (:dialogue @world/the-world)]
              ; draw a world bubble over the speaker
-             (let [speaker (get-in words [:context :speaker])
+             (let [speaker (get-in dialogue [:context :speaker])
                    [x y] (:location speaker)
                    [x0 y0 w h] (thing/bounds-in-local speaker)]
                (word-balloon/draw [x (+ y y0)]  ; position word balloon over top center of speaker
-                                  (:sentence words))))
+                                  (:sentence dialogue))))
            
            (draw/draw-cursor mx my)))
        

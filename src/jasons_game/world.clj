@@ -21,8 +21,8 @@
 
 ;; World
 ;; {:things [ ... ]  ; z-ordered things
-;;  :words { :context { ... }
-;;           :sentence { ... } }}
+;;  :dialogue { :context { ... }
+;;              :sentence { ... } }}
 
 (defn new-world
   ([& things] (let [world (atom {})]
@@ -38,5 +38,5 @@
 
 
 (defn say-something [context sentence]
-  (swap! the-world assoc :words {:context context
-                                 :sentence sentence}))
+  (swap! the-world assoc :dialogue {:context context
+                                    :sentence sentence}))
