@@ -1,6 +1,7 @@
 (ns jasons-game.core
   (:require [clojure.string :refer [join lower-case split]]
-            [clojure.walk :refer [postwalk-replace]]))
+            [clojure.walk :refer [postwalk-replace]]
+            [clojure.zip :as zip]))
 
 ;; Parts of speech
 
@@ -64,6 +65,33 @@
                (case (count words)
                  1 (create-word (first words))
                  (create-phrase words)))})
+
+(defn sentence-zipper
+  [sentence]
+  (letfn
+    [(get-children
+       [node]
+       (condp :type node
+         :sentence (:elements node)
+         :phrase (:words node)))]
+    (zip/zipper get-children
+                get-children
+                (fn [node children]
+                  (condp :type node
+                    :sentence (assoc node :elements children)
+                    :phrase (assoc node :words children)))
+                sentence)))
+
+(defn word? [loc] (= (:type (zip/node loc)) :word))
+
+(defn apply-style
+  [loc style]
+  (if (word? loc)
+    (zip/edit loc assoc :style style)
+    loc))
+
+(defn style-highlight [loc] (apply-style loc :highlight))
+(defn style-normal [loc] (apply-style loc :normal))
 
 ;; Extracting text from sentence structures
 

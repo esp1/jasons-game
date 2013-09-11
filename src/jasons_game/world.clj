@@ -21,8 +21,8 @@
 
 ;; World
 ;; {:things [ ... ]  ; z-ordered things
-;;  :dialogue { :context { ... }
-;;              :sentence { ... } }}
+;;  :utterance { :context { ... }
+;;               :sentence { ... } }}
 
 (defn new-world
   ([& things] (let [world (atom {})]
@@ -37,6 +37,5 @@
   (first (filter #(thing/contains-location (deref %) location) (:things @world))))
 
 
-(defn say-something [context sentence]
-  (swap! the-world assoc :dialogue {:context context
-                                    :sentence sentence}))
+(defn say-something [context utterance]
+  (swap! the-world assoc :utterance (merge {:context context} utterance)))

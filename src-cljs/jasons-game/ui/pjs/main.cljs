@@ -3,8 +3,9 @@
                    [cljs.core.async.macros :refer [go]])
   (:require [cljs.core.async :as async :refer [<! go timeout]]
             [clojure.browser.repl]
+            [clojure.zip :as zip]
             [dommy.core :as dommy]
-            [jasons-game.core :refer [text]]
+            [jasons-game.core :refer [sentence-zipper style-highlight style-normal text word?]]
             [jasons-game.thing :as thing]
             [jasons-game.ui.pjs.draw :as draw]
             [jasons-game.ui.util :refer [ch-get ch-post]]
@@ -19,14 +20,15 @@
 
 ;; Word balloon
 
-(defn word-at-a-time [words]
-  (reverse (map (comp #(clojure.string/join " " %) reverse) (take-while #(< 0 (count %)) (iterate rest (reverse (clojure.string/split words #"\s")))))))
-
-(defn animate-text [words]
-  (let [athing (world/get-thing world/the-world :word-balloon)]
-    (go (doseq [w (word-at-a-time words)]
-          (world/modify-thing athing :words w)
-          (<! (timeout 500))))))
+(defn animate-utterance []
+  (go
+    (doseq [loc (map style-highlight  ; highlight loc
+                     (filter word?  ; only get word locs
+                             (take-while #(not (zip/end? %))  ; stop at end
+                                         (iterate (comp zip/next style-normal)  ; apply normal style to each loc
+                                                  (sentence-zipper (:utterance @world/the-world))))))]
+      (swap! world/the-world assoc :utterance (zip/root loc))
+      (<! (timeout 500)))))
 
 (defn play-audio [sentence]
   (let [audio-file (js/encodeURIComponent (text sentence))]
@@ -38,6 +40,7 @@
 (defn say [context]
   (go (let [sentence (<! (ch-get "/something-to-say"))]
         (world/say-something context sentence)
+        (animate-utterance)
         (play-audio sentence))))
 
 
@@ -65,13 +68,13 @@
            (doseq [thing (world/get-things world/the-world)]
              (thing/draw @thing))
 
-           (when-let [dialogue (:dialogue @world/the-world)]
+           (when-let [utterance (:utterance @world/the-world)]
              ; draw a world bubble over the speaker
-             (let [speaker (get-in dialogue [:context :speaker])
+             (let [speaker (get-in utterance [:context :speaker])
                    [x y] (:location speaker)
                    [x0 y0 w h] (thing/bounds-in-local speaker)]
                (word-balloon/draw [x (+ y y0)]  ; position word balloon over top center of speaker
-                                  (:sentence dialogue))))
+                                  utterance)))
            
            (draw/draw-cursor mx my)))
        

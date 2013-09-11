@@ -1,11 +1,28 @@
 (ns jasons-game.ui.pjs.word-balloon
-  (:require [jasons-game.core :refer [text]]
+  (:require [clojure.zip :as zip]
+            [jasons-game.core :refer [sentence-zipper text word?]]
             [jasons-game.ui.pjs.draw :as d]
             [libre.sketch :as s]))
 
 (def offset 10)
 (def point-width 20)
 (def point-height 40)
+
+(defn draw-text
+  [loc x-offset y-offset]
+  (cond
+    (zip/end? loc) nil  ; stop
+    (word? loc) (let [node (zip/node loc)
+                      t (:text node)
+                      fill (condp :style node
+                             :highlight [200 0 0]
+                             :normal 100
+                             255)]
+                  (js/alert (str t " " fill))
+                  (d/style {:fill fill}
+                           #(s/text t x-offset y-offset))
+                  (recur (zip/next loc) (+ x-offset (s/text-width (str t " "))) y-offset))
+    :else (recur (zip/next loc) x-offset y-offset)))
 
 (defn draw
   [location sentence]
@@ -29,6 +46,4 @@
                                         [0 balloon-height]])))
                    
                    ; draw text
-                   (d/style {:fill 50}
-                            (fn []
-                              (s/text words 20 (+ 20 (s/text-ascent)))))))))
+                   (draw-text (sentence-zipper sentence) 20 (+ 20 (s/text-ascent)))))))
